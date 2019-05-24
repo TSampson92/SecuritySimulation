@@ -5,7 +5,10 @@ class SecurityAgent:
         self.busy = False
         self.gender = gender
         self.role = role
-    
+        
+    # doing this is essentially a built in getter and setter
+    # it uses the getter and setter when using Instance.value syntax
+    # https://www.python-course.eu/python3_properties.php
     @property
     def role(self):
         return self.__role
