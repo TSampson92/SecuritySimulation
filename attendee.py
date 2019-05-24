@@ -8,6 +8,7 @@ class Attendee(object):
         self.metal_percent = metal_percent
         self.current_location = current_location
         self.time_entered = time_entered
+        self.back_check_complete = False
         self.has_bag = has_bag
         self.is_cooperative = is_cooperative
         self.time_step_to_enqueue = 0
