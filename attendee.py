@@ -1,6 +1,5 @@
 import numpy as N
 
-
 class Attendee(object):
 
     def __init__(self, gender, metal_percent, current_location, time_entered, has_bag=False, is_cooperative=True):

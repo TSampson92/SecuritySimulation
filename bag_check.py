@@ -1,3 +1,5 @@
+#Both men and women may have bags that will be inspected when going through
+#security checks.
 class BagCheck:
     def __init__(self, security_personnel: list):
         self.security_personnel = security_personnel
