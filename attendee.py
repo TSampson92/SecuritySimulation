@@ -1,7 +1,7 @@
 import numpy as N
 
-class Attendee(object):
 
+class Attendee(object):
     def __init__(self, gender, metal_percent, current_location, time_entered, has_bag=False, is_cooperative=True):
         self.gender = gender
         self.metal_percent = metal_percent
@@ -10,11 +10,11 @@ class Attendee(object):
         self.back_check_complete = False
         self.has_bag = has_bag
         self.is_cooperative = is_cooperative
-        self.time_step_to_enqueue = 0  #checkpoint class updates this value
+        self.time_step_to_enqueue = 0  # checkpoint class updates this value
         self.time_step_to_dequeue = 0
         self.checkpoint_target = None
     
-    def findCheckpoint(self, checkpoints):
+    def find_checkpoint(self, checkpoints):
         """Finds a checkpoint based on proximity and checkpoint queue size 
         
         The first factor is the proximity of a checkpoint, if a checkpoint is close, line length will be checked
@@ -28,15 +28,15 @@ class Attendee(object):
             """
         pass 
     
-    def calcTotalWait(self, time_waiting):
+    def calc_total_wait(self, time_waiting):
         pass
 
-#This function is called from checkpoint class. Used to store the start time
-#for an attendee's queue experience
+# This function is called from checkpoint class. Used to store the start time
+# for an attendee's queue experience
     def start_queue_time(self, time):
-         self.time_step_to_enqueue = time
+        self.time_step_to_enqueue = time
 
-#This function is called from checkpoint class. It is called when attendee
-#exits the queue and has gone through security. Wait time will stop at this time         
+# This function is called from checkpoint class. It is called when attendee
+# exits the queue and has gone through security. Wait time will stop at this time
     def end_queue_time(self, time):
-         self.time_step_to_dequeue = time
+        self.time_step_to_dequeue = time
