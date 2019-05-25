@@ -1,8 +1,10 @@
 
 class SecurityAgent:
     ROLES = frozenset(['PATDOWN', 'WAND', 'BAG_CHECK', 'METAL_DETECTOR', 'STANDARD'])
+
     def __init__(self, role='PATDOWN', gender=None):
         self.busy = False
+        self.busy_until = 0  # time value that agent is free
         self.gender = gender
         self.role = role
         
@@ -20,7 +22,6 @@ class SecurityAgent:
         else:
             raise Exception('Invalid Role')
             
-    
 
 def test_constructor():
     agent = SecurityAgent()
@@ -41,6 +42,3 @@ def test_constructor():
         assert(True)
         
     print('SecurityAgent constructor test passed')
-
-
-            
