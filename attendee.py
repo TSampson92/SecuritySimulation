@@ -10,7 +10,8 @@ class Attendee(object):
         self.back_check_complete = False
         self.has_bag = has_bag
         self.is_cooperative = is_cooperative
-        self.time_step_to_enqueue = 0
+        self.time_step_to_enqueue = 0  #checkpoint class updates this value
+        self.time_step_to_dequeue = 0
         self.checkpoint_target = None
     
     def findCheckpoint(self, checkpoints):
@@ -30,4 +31,12 @@ class Attendee(object):
     def calcTotalWait(self, time_waiting):
         pass
 
+#This function is called from checkpoint class. Used to store the start time
+#for an attendee's queue experience
+    def start_queue_time(self, time):
+         self.time_step_to_enqueue = time
 
+#This function is called from checkpoint class. It is called when attendee
+#exits the queue and has gone through security. Wait time will stop at this time         
+    def end_queue_time(self, time):
+         self.time_step_to_dequeue = time
