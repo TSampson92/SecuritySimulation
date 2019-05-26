@@ -1,14 +1,29 @@
-import datetime
+
 
 
 class Checkpoint(object):
-
+    
     def __init__(self, security_personnel, bag_check=None, num_metal_detectors=0):
+        """
+        initializes checkpoint object
+        :param security_personnel: [bag checkers, person/metal detector, person after detector]
+        :param bag_check: will be setting this bag_check value later
+        :num_metal_detectors: will be setting this num_metal_detectors value later
+        """
         self.security_personnel = security_personnel
         self.bag_check = bag_check
         self.num_metal_detectors = num_metal_detectors
         self.check_queue = []
+        self.assign_roles()
 
+    def assign_roles(self):
+        """
+        pull apart the list passed in called security_personnel
+        """
+        self.bag_check = self.security_personnel[0]
+        self.num_metal_detectors = self.security_personnel[1]
+        self.bag_check = self.security_personnel[2]
+        
     def add_attendee(self, attendee, current_time):
         """
         adds an attendee to a specific checkpoint queue
