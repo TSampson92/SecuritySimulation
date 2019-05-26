@@ -21,24 +21,3 @@ class SecurityAgent:
             self.__role = role
         else:
             raise Exception('Invalid Role')
-            
-
-def test_constructor():
-    agent = SecurityAgent()
-    assert(agent.role == 'PATDOWN')
-    assert(agent.gender is None)
-    assert(agent.busy == False)
-    agent.role = 'BAG_CHECK'
-    agent.gender = 'male'
-    agent.busy = True
-    assert(agent.role == 'BAG_CHECK')
-    assert(agent.gender == 'male')
-    assert(agent.busy == True)
-
-    try:
-        agent.role = 'bad_role'
-        assert(False)
-    except:
-        assert(True)
-        
-    print('SecurityAgent constructor test passed')
