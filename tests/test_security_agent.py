@@ -1,5 +1,4 @@
-from security_agent import SecurityAgent
-import pytest  # ensures pytest is installed
+from security_simulation.security_agent import SecurityAgent
 
 
 def test_constructor():
