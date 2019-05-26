@@ -5,8 +5,8 @@ Other notes.
 
 import numpy as np
 
-from .checkpoint import Checkpoint
-from .attendee import Attendee
+from security_simulation.checkpoint import Checkpoint
+from security_simulation.attendee import Attendee
 
 
 class Model:

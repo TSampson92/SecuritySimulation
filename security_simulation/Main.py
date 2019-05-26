@@ -5,7 +5,7 @@ Other notes.
 
 import numpy as np
 
-from Model import Model
+from security_simulation.Model import Model
 
 # For each checkpoint;
 # The x coordinate in the space, y coordinate in the space:

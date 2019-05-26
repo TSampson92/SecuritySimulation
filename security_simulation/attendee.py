@@ -1,6 +1,6 @@
 import numpy as N
 
-from checkpoint import Checkpoint
+from security_simulation.checkpoint import Checkpoint
 
 
 class Attendee(object):
