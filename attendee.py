@@ -31,12 +31,27 @@ class Attendee(object):
     def calc_total_wait(self, time_waiting):
         pass
 
-# This function is called from checkpoint class. Used to store the start time
-# for an attendee's queue experience
+
     def start_queue_time(self, time):
+        """setter function used to set the start time for an attendee who recently was added to a queue 
+           
+        This function is called from checkpoint class. Used to store the start time for an attendee's queue experience   
+        
+        Variables
+        time: The current time is an integer that be will be passed in as a parameter
+  
+            """
         self.time_step_to_enqueue = time
 
-# This function is called from checkpoint class. It is called when attendee
-# exits the queue and has gone through security. Wait time will stop at this time
+
     def end_queue_time(self, time):
+        """setter function used to set the end time for an attendee who recently was poped out of queue 
+           
+       This function is called from checkpoint class. It is called when attendee 
+       exits the queue and has gone through security. Wait time will stop at this time 
+        
+        Variables
+        time: The current time is an integer that be will be passed in as a parameter
+  
+            """
         self.time_step_to_dequeue = time
