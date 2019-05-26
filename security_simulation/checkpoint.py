@@ -1,28 +1,51 @@
-
-
+from security_agent import SecurityAgent
+from bag_check import BagCheck
+import random as r
 
 class Checkpoint(object):
     
-    def __init__(self, security_personnel, bag_check=None, num_metal_detectors=0):
+    def __init__(self, security_roles, bag_check=None, num_metal_detectors=0):
         """
         initializes checkpoint object
-        :param security_personnel: [bag checkers, person/metal detector, person after detector]
+        :param security_roles: [bag checkers, person/metal detector, person after detector]
         :param bag_check: will be setting this bag_check value later
         :num_metal_detectors: will be setting this num_metal_detectors value later
         """
-        self.security_personnel = security_personnel
+        self.security_agent_list = []
+        self.security_roles = security_roles
         self.bag_check = bag_check
         self.num_metal_detectors = num_metal_detectors
         self.check_queue = []
         self.assign_roles()
+        
 
     def assign_roles(self):
         """
-        pull apart the list passed in called security_personnel
+        pull apart the list passed in called security_roles
         """
-        self.bag_check = self.security_personnel[0]
-        self.num_metal_detectors = self.security_personnel[1]
-        self.bag_check = self.security_personnel[2]
+        for index in range(len(self.security_roles)):
+            num_of_security = self.security_roles[index]
+            i = 0
+            while (i < num_of_security):
+                if r.random() < .50:
+                    gender = "M"
+                else:
+                    gender = "F"
+                agent = SecurityAgent()
+                if(index == 0): # index 0 refers to num of security for bag check
+                    agent.test_role("BAG_CHECK",gender)
+                elif(index == 1): # index 1 refers to num security in metal detector
+                    agent.test_role("METAL_DETECTOR",gender)
+                    self.num_metal_detectors = num_of_security
+                elif(index == 2): # index 2 refers num of security after detector
+                    agent.test_role("STANDING",gender)
+                self.security_agent_list.append(agent)
+                i = i+1
+                print("at index:", index,"=", num_of_security)
+        #self.bag_check = BagCheck(security_agent_list)
+            
+        
+        
         
     def add_attendee(self, attendee, current_time):
         """
@@ -46,7 +69,14 @@ class Checkpoint(object):
             attendee = self.check_queue.pop(0)  # pop the first element in queue
             attendee.end_queue_time(current_time)
             return attendee  # return attendee popped off
-
+    
+    def get_security(self):  
+        """
+        get method to return access to security agent list to external classes
+        :return: list of security agents
+        """ 
+        return self.security_agent_list
+    
     def update(self, current_time):
         # TODO perform all actions for a timestep
         pass
