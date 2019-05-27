@@ -1,6 +1,9 @@
-from security_simulation.security_agent import SecurityAgent
-from security_simulation.bag_check import BagCheck
 import random as r
+# from security_simulation.security_agent import SecurityAgent
+# from security_simulation.bag_check import BagCheck
+from security_agent import SecurityAgent
+from bag_check import BagCheck
+
 
 class Checkpoint(object):
     
@@ -76,3 +79,12 @@ class Checkpoint(object):
         get method to return length of main_queue which contains attendees
         """ 
         return len(self.main_queue)                                               
+        
+    def average_wait_time(self):
+        """
+        calculates the average wait time for a specific checkpoint location
+        :return: integer value that represents average wait time
+        """
+        time_list = self.bag_check.get_wait_time()
+        time = sum(time_list) 
+        time = time/ len(time_list)
