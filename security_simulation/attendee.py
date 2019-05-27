@@ -26,13 +26,14 @@ class Attendee(object):
             self.isCooperative = False
         self.current_location = current_location
         self.time_entered = time_entered
-        self.back_check_complete = False
+        self.bag_check_complete = False
         self.has_bag = has_bag
         self.time_step_to_enqueue = 0  # find_checkpoint updates this value
         self.time_step_to_dequeue = 0
         self.arrives_at_checkpoint = 0
         self.total_wait = 0
         self.status = 0 # 1= bag_check, 2 = metal detector
+        self.checkpoint_target = None
 
     
     _vectorized_attendee = N.vectorize(__init__)
@@ -151,4 +152,24 @@ class Attendee(object):
             return True
         
         return False
-        
+
+    def to_dict(self):
+        """
+        Convert object to json like dict representation
+        :return: dict containing object data
+        """
+        data = {
+            'gender': self.gender,
+            'metal_percent': self.metal_percent,
+            'isCooperative': self.isCooperative,
+            'current_location': self.current_location,
+            'bag_check_complete': self.bag_check_complete,
+            'has_bag': self.has_bag,
+            'time_step_to_enqueue': self.time_step_to_enqueue,
+            'time_step_to_dequeue': self.time_step_to_dequeue,
+            'arrives_at_checkpoint': self.arrives_at_checkpoint,
+            'total_wait': self.total_wait,
+            'status': self.status,
+            'check_point_target': self.checkpoint_target
+        }
+        return data
