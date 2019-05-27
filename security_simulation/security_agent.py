@@ -23,6 +23,11 @@ class SecurityAgent:
             raise Exception('Invalid Role')
 
     def test_role(self, role, gender):  # to test that role was set by checkpoint
+        """
+        test function used to set the role of security agent
+        :param role: string that contains the name of the role
+        :param gender: string that is either "F" or "M"
+        """
         self.role = role
-        self.busy = True             # once given role, security agent is busy
+        self.busy = True            
         self.gender = gender

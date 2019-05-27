@@ -58,7 +58,6 @@ class Attendee(object):
            
         Variables:
             Checkpoints: List of open checkpoints in current security configuration
-
         Sets the time_step_to_enque and the checkpoint_target based on the checkpoint the agent decides to go to
         Returns:
             A reference to the target checkpoint that the attendee has chosen
@@ -152,4 +151,4 @@ class Attendee(object):
             return True
         
         return False
-
+        
