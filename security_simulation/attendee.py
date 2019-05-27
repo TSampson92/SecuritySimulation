@@ -35,7 +35,7 @@ class Attendee(object):
         self.status = 0 # 1= bag_check, 2 = metal detector
 
     
-    _vectorized_attendee = N.vectorize(__init__, otypes=object)
+    _vectorized_attendee = N.vectorize(__init__)
    
     def vec_attendee (self, gender, metal_mean, metal_std_dev, coop_percent):
         return self._vectorized_attendee(gender, metal_mean, metal_std_dev, coop_percent)
