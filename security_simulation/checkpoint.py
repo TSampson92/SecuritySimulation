@@ -12,7 +12,6 @@ class Checkpoint(object):
         :num_metal_detectors: will be setting this num_metal_detectors value later
         """
         self.security_agent_list = []
-        #self.bag_queue = []
         self.metal_queue = []
         self.security_roles = security_roles
         self.bag_check = bag_check
@@ -55,17 +54,6 @@ class Checkpoint(object):
         self.main_queue.append(attendee)
         attendee.start_queue_time(current_time)  # the time attendee has entered queue
         return len(self.main_queue)
-
-    def pop_attendee(self, current_time):
-        """
-        update the end time for attendee and then pop off attendee from start of line
-        :param current_time: time in seconds from start of simulation
-        :return: attendee removed from queue
-        """
-        if len(self.main_queue) > 0:
-            attendee = self.main_queue.pop(0)  # pop the first element in queue
-            attendee.end_queue_time(current_time)
-            return attendee                     # return attendee popped off
     
     def update(self):
         """
@@ -87,4 +75,4 @@ class Checkpoint(object):
         """
         get method to return length of main_queue which contains attendees
         """ 
-        return len(self.main_queue)
+        return len(self.main_queue)                                               

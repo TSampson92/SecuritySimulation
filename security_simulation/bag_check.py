@@ -15,9 +15,6 @@ class BagCheck:
         self.number_to_check = attendees_to_check
         self.metal_detector_queue = []
         self.bag_check_queue = []
-        self.remove_attendees = []
-        # function to return a random bag search time
-        # call like self.bag_check_time()
         self.bag_check_time = lambda: base_search_time + \
                                       random.randint(0, search_time_variance)
         self.metal_detector_time = base_search_time + random.randint(0, 15)
@@ -39,25 +36,33 @@ class BagCheck:
                             attendee_index = attendee_index+1
                             attendee.status = 1   #update their status to 1
                         else: #attendee doesn't have bag move them to metal detector
-                            attendee.status = 1
-                            self.metal_detector_queue.append(attendee)
-                            main_queue.pop(0)
+                            person = main_queue.pop(0)
+                            person.status = 1
+                            self.metal_detector_queue.append(person)
             elif personnel.busy() == False and role == "METAL_DETECTOR":
                 if self.metal_detector_queue.len >0:
-                    self.metal_detector_queue[0].status = 2 #which means they are finished
-                    attendee = self.metal_detector_queue.pop(0)
-                    self.remove_attendees.append(attendee)
+                    current_time = datetime.datetime.now().time()
+                    self.pop_attendee(current_time)
                     personnel.busy = True
-                    personnel.busy_until = datetime.datetime.now().time() + self.metal_detector_time
+                    personnel.busy_until = current_time + self.metal_detector_time
+            #elif personnel.busy() == False and role == "StANDING":    
             elif personnel.busy() == True:
                 current_time = datetime.datetime.now().time()
                 if personnel.busy_until < current_time: #which means personnel is free
-                    personnel.busy = False      
-            # TODO for each security person at bag check
-            # check first three to 5 people in the line for having a bag
-            # if they have a bag and a security agent is free have the agent
-            # check their bag setting agent to busy for a certain amount of time
-            
+                    personnel.busy = False  
+                        
+    def pop_attendee(self, current_time):
+        """
+        update the end time for attendee and then pop off attendee from start of line
+        :param current_time: time in seconds from start of simulation
+        :return: attendee removed from queue
+        """
+        if len(self.metal_detector_queue) > 0:
+            attendee = self.metal_detector_queue.pop(0)  # pop the first element in queue
+            attendee.end_queue_time(current_time)
+            attendee.status = 2 
+            return attendee                     # return attendee popped off
+                    
     def get_bag_check_queue(self):
         """
         function to return the bag_check_queue
@@ -71,3 +76,4 @@ class BagCheck:
         :return: list of attendees at metal_detector_queue
         """
         return self.metal_detector_queue
+        

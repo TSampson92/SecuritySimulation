@@ -28,6 +28,5 @@ class SecurityAgent:
         :param role: string that contains the name of the role
         :param gender: string that is either "F" or "M"
         """
-        self.role = role
-        self.busy = True            
+        self.role = role           
         self.gender = gender
