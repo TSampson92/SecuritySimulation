@@ -4,27 +4,43 @@ import numpy.random as rand
 
 from security_simulation.checkpoint import Checkpoint
 
-
+LOW_WALK_SPEED = 1.25
+HIGH_WALK_SPEED = 1.51
 class Attendee(object):
     # These values are in meters per second
-    LOW_WALK_SPEED = 1.25
-    HIGH_WALK_SPEED = 1.51
+    
+    
 
-    def __init__(self, gender, metal_percent, current_location, time_entered, has_bag=False, is_cooperative=True):
-        self.gender = gender
-        self.metal_percent = metal_percent
+    def __init__(self, gender, metal_mean, metal_std_dev, coop_chance, current_location=(0,0), time_entered=0, has_bag=False):
+        # For gender, True == Female, False == Male
+        if rand.rand() > gender:
+            self.gender = True
+        else:
+            self.gender = False
+
+        self.metal_percent = rand.normal(loc=metal_mean, scale=metal_std_dev)
+
+        if rand.rand() < coop_chance:
+            self.isCooperative = True
+        else:
+            self.isCooperative = False
         self.current_location = current_location
         self.time_entered = time_entered
         self.back_check_complete = False
         self.has_bag = has_bag
-        self.is_cooperative = is_cooperative
         self.time_step_to_enqueue = 0  # find_checkpoint updates this value
         self.time_step_to_dequeue = 0
         self.arrives_at_checkpoint = 0
         self.total_wait = 0
-        self.checkpoint_target = None
-        self.status = 0 # 1= bag_check, 2 = metal detector 
+        self.status = 0 # 1= bag_check, 2 = metal detector
 
+    
+    _vectorized_attendee = N.vectorize(__init__, otypes=object)
+   
+    def vec_attendee (self, gender, metal_mean, metal_std_dev, coop_percent):
+        return self._vectorized_attendee(gender, metal_mean, metal_std_dev, coop_percent)
+    
+   
     def calc_distance(self, checkpoint_loc):
         """ Calculates the distance between this attendee and a checkpoint. 
             This is used by the find_checkpoint method as a factor in determining 
@@ -77,7 +93,7 @@ class Attendee(object):
             Generates a random speed in mps from average walking speeds"""
         # From: https://en.wikipedia.org/wiki/Walking, use random float between 4.51() kph (1.25 mps) to 5.43 kph (1.51 mps) to simulate
         # a walking speed
-        attendee_speed = rand.normal(loc=1.25, scale=1.51)
+        attendee_speed = rand.uniform(LOW_WALK_SPEED, HIGH_WALK_SPEED)
         self.time_step_to_enqueue = N.ceil((distance / attendee_speed)) + self.time_entered
         return self.time_step_to_enqueue
 
@@ -122,5 +138,18 @@ class Attendee(object):
         return False
 
     def update(self, time_step):
-        """ Performs the necessary updates for this attendee may not be necessary but leaving here to come back to """
-        pass
+        """ Performs a check on an attendee's arrival time at their chosen checkpoint
+                If the attendee has arrived, they move into the queue of that checkpoint
+            Parameters: 
+                time_step: The current time step the simulation is at. Compared against the arrival time
+                    of the attendee at a checkpoint
+            Returns:
+                True if the attendee has arrived, the attendee is now in their target checkpoint
+                False if they have not, nothing else happens"""
+        if self.arrived_at_checkpoint(time_step):
+            self.start_queue_time(time_step)
+            self.checkpoint_target.add_attendee(self, time_step)
+            return True
+        
+        return False
+
