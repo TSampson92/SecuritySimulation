@@ -1,7 +1,7 @@
 # Both men and women may have bags that will be inspected when going through
 # security checks.
 import random
-
+import datetime
 
 class BagCheck:
     def __init__(self, security_personnel: list, attendees_to_check=5,
@@ -15,18 +15,49 @@ class BagCheck:
         """
         self.security_personnel = security_personnel
         self.number_to_check = attendees_to_check
+        self.metal_detector_queue = []
+        self.bag_check_queue = []
+        self.remove_attendees = []
         # function to return a random bag search time
         # call like self.bag_check_time()
         self.bag_check_time = lambda: base_search_time + \
                                       random.randint(0, search_time_variance)
+        self.metal_detector_time = base_search_time + random.randint(0, 15)
         
     def check_bags(self, attendee_queue):
         """
         :param attendee_queue: Queue of attendees waiting for this bag check
-        :return:
+        :return: list of attendees to be removed from checkpoint class
         """
+        attendee_index = 0
         for personnel in self.security_personnel:
-            pass
+            role = personnel.role()
+            if (personnel.busy() == False and role == "BAG_CHECK"()):
+                if(attendee_queue.len >0):
+                    attendee = attendee_queue[attendee_index]
+                    if attendee.status == 0():  #attendee just entered queue
+                        if attendee.has_bag() == True:
+                            personnel.busy = True
+                            personnel.busy_until = datetime.datetime.now().time() + self.bag_check_time
+                            attendee_index = attendee_index+1
+                            attendee.status = 1   #update their status to 1
+                        else: #attendee doesn't have bag move them to metal detector
+                            attendee.status = 1
+                            self.metal_detector_queue.append(attendee)
+                            attendee_queue.pop(0)
+            elif(personnel.busy() == False and role == "METAL_DETECTOR"()):
+                if(self.metal_detector_queue.len >0):
+                    self.metal_detector_queue[0].status = 2 #which means they are finished
+                    attendee = self.metal_detector_queue.pop(0)
+                    self.remove_attendees.append(attendee)
+                    personnel.busy = True
+                    personnel.busy_until = datetime.datetime.now().time() + self.metal_detector_time
+            elif(personnel.busy() == True):
+                current_time = datetime.datetime.now().time()
+                if(personnel.busy_until < current_time): #which means personnel is free
+                    personnel.busy = False
+                    
+        return self.remove_attendees
             # TODO for each security person at bag check
             # check first three to 5 people in the line for having a bag
             # if they have a bag and a security agent is free have the agent

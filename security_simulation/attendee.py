@@ -23,6 +23,7 @@ class Attendee(object):
         self.arrives_at_checkpoint = 0
         self.total_wait = 0
         self.checkpoint_target = None
+        self.status = 0 # 1= bag_check, 2 = metal detector 
 
     def calc_distance(self, checkpoint_loc):
         """ Calculates the distance between this attendee and a checkpoint. 
