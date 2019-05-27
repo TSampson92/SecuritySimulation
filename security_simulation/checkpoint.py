@@ -1,5 +1,5 @@
-from security_agent import SecurityAgent
-from bag_check import BagCheck
+from security_simulation.security_agent import SecurityAgent
+from security_simulation.bag_check import BagCheck
 import random as r
 
 class Checkpoint(object):
