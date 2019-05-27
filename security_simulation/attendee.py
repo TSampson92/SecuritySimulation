@@ -6,7 +6,7 @@ from security_simulation.checkpoint import Checkpoint
 
 
 class Attendee(object):
-    #These values are in meters per second
+    # These values are in meters per second
     LOW_WALK_SPEED = 1.25
     HIGH_WALK_SPEED = 1.51
 
@@ -23,7 +23,6 @@ class Attendee(object):
         self.arrives_at_checkpoint = 0
         self.total_wait = 0
         self.checkpoint_target = None
-    
 
     def calc_distance(self, checkpoint_loc):
         """ Calculates the distance between this attendee and a checkpoint. 
@@ -32,7 +31,6 @@ class Attendee(object):
         """
         return N.sqrt((self.current_location[1] - checkpoint_loc[1])**2 \
                     + (self.current_location[0] - checkpoint_loc[0])**2)
-
 
     def find_checkpoint(self, checkpoints):
         """Finds a checkpoint based on proximity and checkpoint queue size 
@@ -57,29 +55,26 @@ class Attendee(object):
         
         min_length = N.min(checkpoint_line_len)
         min_dist = N.min(checkpoint_distances)
-        #If the min_length of all lines is > 0, divide all lengths by the min_length
+        # If the min_length of all lines is > 0, divide all lengths by the min_length
         if (min_length > 0):
             checkpoint_line_len = checkpoint_line_len / min_length
-        #Same idea for the distances
+        # Same idea for the distances
         if (min_dist > 0):
             checkpoint_ratios = checkpoint_distances / min_dist
         
-        #Add these values together, and choose the smallest value
+        # Add these values together, and choose the smallest value
         checkpoint_rankings = checkpoint_ratios + checkpoint_line_len
         min_index = N.argmin(checkpoint_rankings)
-        #found the target checkpoint, set that as the target_checkpoint
+        # found the target checkpoint, set that as the target_checkpoint
         self.checkpoint_target = checkpoints[min_index]
         self.calc_checkpoint_arrival(checkpoint_distances[min_index])
         return self.checkpoint_target
 
-        
-
-    
     def calc_checkpoint_arrival(self, distance):
         """ Calculate the time step that an attendee arrives at their target checkpoint 
             distance: the distance in meters from attendee's spawn to the checkpoint
             Generates a random speed in mps from average walking speeds"""
-        #From: https://en.wikipedia.org/wiki/Walking, use random float between 4.51() kph (1.25 mps) to 5.43 kph (1.51 mps) to simulate
+        # From: https://en.wikipedia.org/wiki/Walking, use random float between 4.51() kph (1.25 mps) to 5.43 kph (1.51 mps) to simulate
         # a walking speed
         attendee_speed = rand.normal(loc=1.25, scale=1.51)
         self.time_step_to_enqueue = N.ceil((distance / attendee_speed)) + self.time_entered
@@ -93,7 +88,6 @@ class Attendee(object):
         self.total_wait = current_time_step - self.time_entered
         return self.total_wait
 
-
     def start_queue_time(self, time):
         """setter function used to set the start time for an attendee who recently was added to a queue 
            
@@ -104,7 +98,6 @@ class Attendee(object):
   
             """
         self.time_step_to_enqueue = time
-
 
     def end_queue_time(self, time):
         """setter function used to set the end time for an attendee who recently was poped out of queue 
@@ -126,7 +119,6 @@ class Attendee(object):
             return True
         
         return False
-
 
     def update(self, time_step):
         """ Performs the necessary updates for this attendee may not be necessary but leaving here to come back to """

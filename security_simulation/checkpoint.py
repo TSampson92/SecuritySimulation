@@ -1,6 +1,7 @@
-from security_agent import SecurityAgent
-from bag_check import BagCheck
+from security_simulation.security_agent import SecurityAgent
+from security_simulation.bag_check import BagCheck
 import random as r
+
 
 class Checkpoint(object):
     
@@ -17,7 +18,6 @@ class Checkpoint(object):
         self.num_metal_detectors = num_metal_detectors
         self.check_queue = []
         self.assign_roles()
-        
 
     def assign_roles(self):
         """
@@ -26,27 +26,24 @@ class Checkpoint(object):
         for index in range(len(self.security_roles)):
             num_of_security = self.security_roles[index]
             i = 0
-            while (i < num_of_security):
+            while i < num_of_security:
                 if r.random() < .50:
                     gender = "M"
                 else:
                     gender = "F"
                 agent = SecurityAgent()
-                if(index == 0): # index 0 refers to num of security for bag check
-                    agent.test_role("BAG_CHECK",gender)
-                elif(index == 1): # index 1 refers to num security in metal detector
-                    agent.test_role("METAL_DETECTOR",gender)
+                if index == 0:  # index 0 refers to num of security for bag check
+                    agent.test_role("BAG_CHECK", gender)
+                elif index == 1:  # index 1 refers to num security in metal detector
+                    agent.test_role("METAL_DETECTOR", gender)
                     self.num_metal_detectors = num_of_security
-                elif(index == 2): # index 2 refers num of security after detector
-                    agent.test_role("STANDING",gender)
+                elif index == 2:  # index 2 refers num of security after detector
+                    agent.test_role("STANDING", gender)
                 self.security_agent_list.append(agent)
-                i = i+1
-                print("at index:", index,"=", num_of_security)
-        #self.bag_check = BagCheck(security_agent_list)
-            
-        
-        
-        
+                i = i + 1
+                print("at index:", index, "=", num_of_security)
+        # self.bag_check = BagCheck(security_agent_list)
+
     def add_attendee(self, attendee, current_time):
         """
         adds an attendee to a specific checkpoint queue

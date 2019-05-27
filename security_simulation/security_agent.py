@@ -21,9 +21,8 @@ class SecurityAgent:
             self.__role = role
         else:
             raise Exception('Invalid Role')
-    
-                 
-    def test_role(self,role,gender): #to test that role was set by checkpoint   
+
+    def test_role(self, role, gender):  # to test that role was set by checkpoint
         self.role = role
-        self.busy = True             #once given role, security agent is busy
+        self.busy = True             # once given role, security agent is busy
         self.gender = gender
