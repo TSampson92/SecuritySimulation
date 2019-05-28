@@ -23,10 +23,10 @@ class Checkpoint(object):
         self.location = location
         self.assign_roles()
     
-    #Security personnel are instantiated and are assigned roles based on input
-    #index 0 refers to num of security for bag check
-    #index 1 refers to num security in metal detector 
-    #index 2 refers num of security after detector  
+    # Security personnel are instantiated and are assigned roles based on input
+    # index 0 refers to num of security for bag check
+    # index 1 refers to num security in metal detector
+    # index 2 refers num of security after detector
     def assign_roles(self):
         """
         pull apart the list passed in called security_roles
@@ -45,7 +45,7 @@ class Checkpoint(object):
                 elif index == 1: 
                     agent.test_role("METAL_DETECTOR",gender)
                     self.num_metal_detectors = num_of_security
-                elif index == 2 : 
+                elif index == 2:
                     agent.test_role("STANDING",gender)
                 self.security_agent_list.append(agent)
                 i = i+1
@@ -63,12 +63,12 @@ class Checkpoint(object):
         attendee.start_queue_time(current_time)  # the time attendee has entered queue
         return len(self.main_queue)
     
-    def update(self,current_time):
+    def update(self, current_time):
         """
         update function cycles through the queue, updates status of security
         and pops attendee's that are finished waiting
         """
-        self.bag_check.cycle_queues(self.main_queue,self.metal_queue)
+        self.bag_check.cycle_queues(self.main_queue, self.metal_queue, current_time)
         self.main_queue = self.bag_check.get_bag_check_queue()
         self.metal_queue = self.bag_check.get_metal_detector_queue()
             
@@ -98,17 +98,4 @@ class Checkpoint(object):
         """
         time_list = self.bag_check.get_wait_time()
         time = sum(time_list) 
-        time = time/ len(time_list)
-        
-def main():
-    print("entering main function in checkpoint.py")
-    check = Checkpoint([2,1,1])
-    # att_1 = Attendee(.5, 0.3, .25, .5)
-    # att_2 = Attendee(.5, 0.3, .25, .5, current_location=(0,5))
-    # att_3 = Attendee(.5, 0.3, .25, .5, current_location=(5,7))
-    # check.add_attendee(att_1)
-    # check.add_attendee(att_2)
-    # check.add_attendee(att_3)
-    print("entering cycle_queues in bag_check")
-    check.update()
-    
+        time = time / len(time_list)

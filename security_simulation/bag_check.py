@@ -1,5 +1,5 @@
 import random
-import datetime
+
 
 class BagCheck:
     def __init__(self, security_personnel: list,
@@ -17,52 +17,51 @@ class BagCheck:
                                       random.randint(0, search_time_variance)
         self.metal_detector_time = base_search_time + random.randint(0, 15)
         
-    #Function will cycle through all the security, assigning each one an attendee 
-    #from the following queues: the main queue and the metal_detector_queue
-    #Security will only be assigned an attendee if they are not busy
-    #If security is currently busy, check to see if they need to be freed from attendee
-    #Once attendee is popped from metal_detector_queue store their wait time in self.wait_time[]   
-    def cycle_queues(self, main_queue, metal_queue):
+    # Function will cycle through all the security, assigning each one an attendee
+    # from the following queues: the main queue and the metal_detector_queue
+    # Security will only be assigned an attendee if they are not busy
+    # If security is currently busy, check to see if they need to be freed from attendee
+    # Once attendee is popped from metal_detector_queue store their wait time in self.wait_time[]
+    def cycle_queues(self, main_queue, metal_queue, current_sim_time):
         """
         Core function that cycles through queues updating attendee and security info
         :param main_queue: Queue of attendees waiting for bag check
         :param metal_queue: Queue of attendees waiting for metal detector
+        :param current_sim_time: current time of the simulation
         """
         self.metal_detector_queue = metal_queue
         self.main_queue = main_queue
         for personnel in self.security_personnel:
-            print("busy: ",personnel.busy, " && role:",personnel.role)
-            if personnel.busy == False and personnel.role == "BAG_CHECK":
-                if len(self.main_queue) >0:
+            print("busy: ", personnel.busy, " && role:", personnel.role)
+            if personnel.busy is False and personnel.role == "BAG_CHECK":
+                if len(self.main_queue) > 0:
                     attendee = self.main_queue.pop(0)
-                    if attendee.status == 0(): 
-                        if attendee.has_bag() == True:
+                    if attendee.status == 0:
+                        if attendee.has_bag:
                             personnel.busy = True
-                            personnel.busy_until = datetime.datetime.now().time() + self.bag_check_time
-                            personnel.set_Attendee(attendee) #give attendee to security
-                        else: #attendee doesn't have bag move them to metal detector
+                            personnel.busy_until = current_sim_time + self.bag_check_time
+                            personnel.set_attendee(attendee)  # give attendee to security
+                        else:  # attendee doesn't have bag move them to metal detector
                             attendee.status = 1
                             self.metal_detector_queue.append(attendee)
-            elif personnel.busy == False and personnel.role == "METAL_DETECTOR":
-                if len(self.metal_detector_queue) >0:
-                    current_time = datetime.datetime.now().time()
+            elif personnel.busy is False and personnel.role == "METAL_DETECTOR":
+                if len(self.metal_detector_queue) > 0:
                     attendee = self.metal_detector_queue.pop(0)
                     personnel.busy = True
-                    personnel.busy_until = current_time + self.metal_detector_time
-                    personnel.set_Attendee(attendee)
-            #elif personnel.busy == False and personnel.role == "StANDING":    
-            elif personnel.busy == True: 
-                current_time = datetime.datetime.now().time()
-                if personnel.busy_until < current_time:  #which means personnel is free
+                    personnel.busy_until = current_sim_time + self.metal_detector_time
+                    personnel.set_attendee(attendee)
+            # elif personnel.busy == False and personnel.role == "StANDING":
+            elif personnel.busy:
+                if personnel.busy_until < current_sim_time:   # which means personnel is free
                     personnel.busy = False  
                     if personnel.role == "BAG_CHECK":
-                        attendee = personnel.get_Attendee() 
+                        attendee = personnel.get_attendee()
                         attendee.status = 1
-                        self.metal_detector_queue.append(attendee) #add to next queue
+                        self.metal_detector_queue.append(attendee)  # add to next queue
                     elif personnel.role == "METAL_DETECTOR":
-                        attendee = personnel.get_Attendee()
+                        attendee = personnel.get_attendee()
                         attendee.status = 2
-                        self.end_attendee_time(current_time,attendee) 
+                        self.end_attendee_time(current_sim_time, attendee)
                         
     def end_attendee_time(self, current_time, attendee):
         """
@@ -72,7 +71,7 @@ class BagCheck:
         """
         attendee.end_queue_time(current_time)
         total_time = attendee.calc_total_wait(current_time) 
-        self.wait_time.append(total_time)   #keep track of all attendees wait time
+        self.wait_time.append(total_time)   # keep track of all attendees wait time
                     
     def get_bag_check_queue(self):
         """
@@ -94,5 +93,3 @@ class BagCheck:
         :return: list of wait times to be calculated 
         """
         return self.wait_time
-           
-    
