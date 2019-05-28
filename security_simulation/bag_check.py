@@ -10,24 +10,32 @@ class BagCheck:
         :param search_time_variance: max number to add onto base search time
         """
         self.security_personnel = security_personnel
-        self.metal_detector_queue = []
+        self.metal_detector_queue = []     
         self.main_queue = []
+        self.wait_time = []
         self.bag_check_time = lambda: base_search_time + \
                                       random.randint(0, search_time_variance)
         self.metal_detector_time = base_search_time + random.randint(0, 15)
-        self.wait_time = []
         
+    #Function will cycle through all the security, assigning each one an attendee 
+    #from the following queues: the main queue and the metal_detector_queue
+    #Security will only be assigned an attendee if they are not busy
+    #If security is currently busy, check to see if they need to be freed from attendee
+    #Once attendee is popped from metal_detector_queue store their wait time in self.wait_time[]   
     def cycle_queues(self, main_queue, metal_queue):
         """
-        :param attendee_queue: Queue of attendees waiting for this bag check
+        Core function that cycles through queues updating attendee and security info
+        :param main_queue: Queue of attendees waiting for bag check
+        :param metal_queue: Queue of attendees waiting for metal detector
         """
         self.metal_detector_queue = metal_queue
         self.main_queue = main_queue
         for personnel in self.security_personnel:
+            print("busy: ",personnel.busy, " && role:",personnel.role)
             if personnel.busy == False and personnel.role == "BAG_CHECK":
                 if len(self.main_queue) >0:
                     attendee = self.main_queue.pop(0)
-                    if attendee.status == 0():  #attendee just entered queue
+                    if attendee.status == 0(): 
                         if attendee.has_bag() == True:
                             personnel.busy = True
                             personnel.busy_until = datetime.datetime.now().time() + self.bag_check_time
@@ -45,7 +53,7 @@ class BagCheck:
             #elif personnel.busy == False and personnel.role == "StANDING":    
             elif personnel.busy == True: 
                 current_time = datetime.datetime.now().time()
-                if personnel.busy_until < current_time: #which means personnel is free
+                if personnel.busy_until < current_time:  #which means personnel is free
                     personnel.busy = False  
                     if personnel.role == "BAG_CHECK":
                         attendee = personnel.get_Attendee() 

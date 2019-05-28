@@ -1,8 +1,6 @@
 import random as r
 from security_simulation.security_agent import SecurityAgent
 from security_simulation.bag_check import BagCheck
-# from security_simulation.attendee import Attendee
-#from attendee import Attendee
 # from security_agent import SecurityAgent
 # from bag_check import BagCheck
 
@@ -22,9 +20,13 @@ class Checkpoint(object):
         self.bag_check = bag_check
         self.num_metal_detectors = num_metal_detectors
         self.main_queue = []
-        self.assign_roles()
         self.location = location
-        
+        self.assign_roles()
+    
+    #Security personnel are instantiated and are assigned roles based on input
+    #index 0 refers to num of security for bag check
+    #index 1 refers to num security in metal detector 
+    #index 2 refers num of security after detector  
     def assign_roles(self):
         """
         pull apart the list passed in called security_roles
@@ -38,17 +40,17 @@ class Checkpoint(object):
                 else:
                     gender = "F"
                 agent = SecurityAgent()
-                if index == 0: # index 0 refers to num of security for bag check
+                if index == 0: 
                     agent.test_role("BAG_CHECK",gender)
-                elif index == 1: # index 1 refers to num security in metal detector
+                elif index == 1: 
                     agent.test_role("METAL_DETECTOR",gender)
                     self.num_metal_detectors = num_of_security
-                elif index == 2 : # index 2 refers num of security after detector
+                elif index == 2 : 
                     agent.test_role("STANDING",gender)
                 self.security_agent_list.append(agent)
                 i = i+1
-                print("at index:", index,"=", num_of_security)
-        self.bag_check = BagCheck(self.security_agent_list) #intialize one bagcheck per queue
+                print("at index:", index,"=", num_of_security, agent.role)
+        self.bag_check = BagCheck(self.security_agent_list) 
                   
     def add_attendee(self, attendee, current_time):
         """
@@ -61,7 +63,7 @@ class Checkpoint(object):
         attendee.start_queue_time(current_time)  # the time attendee has entered queue
         return len(self.main_queue)
     
-    def update(self):
+    def update(self,current_time):
         """
         update function cycles through the queue, updates status of security
         and pops attendee's that are finished waiting
@@ -107,5 +109,6 @@ def main():
     # check.add_attendee(att_1)
     # check.add_attendee(att_2)
     # check.add_attendee(att_3)
+    print("entering cycle_queues in bag_check")
     check.update()
     
