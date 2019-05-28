@@ -156,6 +156,24 @@ class Attendee(object):
             return True
         
         return False
+    
+    def get_waiting_in_line(self):
+        """
+        Return the time the attendee spent waiting in line
+        Returns:
+            An integer that represents the time that the attendee spent in the
+            checkpoint line in seconds
+        """
+        return self.time_step_to_dequeue - self.time_step_to_enqueue
+
+    def get_time_walking(self):
+        """
+        Returns how long it took for the attendee to walk to their chosen checkpoint
+        Return:
+            An integer that represents the time that the attendee spent walking to the 
+            checkpoint in seconds.
+        """
+        return self.arrives_at_checkpoint - self.time_entered
 
     def to_dict(self):
         """
