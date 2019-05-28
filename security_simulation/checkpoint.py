@@ -1,8 +1,10 @@
 import random as r
-# from security_simulation.security_agent import SecurityAgent
-# from security_simulation.bag_check import BagCheck
-from security_agent import SecurityAgent
-from bag_check import BagCheck
+from security_simulation.security_agent import SecurityAgent
+from security_simulation.bag_check import BagCheck
+# from security_simulation.attendee import Attendee
+#from attendee import Attendee
+# from security_agent import SecurityAgent
+# from bag_check import BagCheck
 
 
 class Checkpoint(object):
@@ -95,5 +97,15 @@ class Checkpoint(object):
         time_list = self.bag_check.get_wait_time()
         time = sum(time_list) 
         time = time/ len(time_list)
-
+        
+def main():
+    print("entering main function in checkpoint.py")
+    check = Checkpoint([2,1,1])
+    # att_1 = Attendee(.5, 0.3, .25, .5)
+    # att_2 = Attendee(.5, 0.3, .25, .5, current_location=(0,5))
+    # att_3 = Attendee(.5, 0.3, .25, .5, current_location=(5,7))
+    # check.add_attendee(att_1)
+    # check.add_attendee(att_2)
+    # check.add_attendee(att_3)
+    check.update()
     
