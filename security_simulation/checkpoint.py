@@ -52,26 +52,36 @@ class Checkpoint(object):
                 print("at index:", index,"=", num_of_security, agent.role)
         self.bag_check = BagCheck(self.security_agent_list) 
                   
-    def add_attendee(self, attendee, current_time):
+    def add_attendee(self, attendee, current_sim_time):
         """
         adds an attendee to a specific checkpoint queue
         :param attendee: attendee object to add to queue
-        :param current_time: time in seconds from start of simulation
+        :param current_sim_time: current time of the simulation
         :return: length of queue int
         """
         self.main_queue.append(attendee)
-        attendee.start_queue_time(current_time)  # the time attendee has entered queue
+        attendee.start_queue_time(current_sim_time)  # the time attendee has entered queue
         return len(self.main_queue)
     
-    def update(self, current_time):
+    def update(self, current_sim_time):
         """
         update function cycles through the queue, updates status of security
         and pops attendee's that are finished waiting
+        :param current_sim_time: current time of the simulation
         """
-        self.bag_check.cycle_queues(self.main_queue, self.metal_queue, current_time)
+        self.bag_check.cycle_queues(self.main_queue, self.metal_queue, current_sim_time)
         self.main_queue = self.bag_check.get_bag_check_queue()
-        self.metal_queue = self.bag_check.get_metal_detector_queue()
-            
+        self.metal_queue = self.bag_check.get_metal_detector_queue()   
+    
+    def average_wait_time(self):
+        """
+        calculates the average wait time for a specific checkpoint location
+        :return: integer value that represents average wait time
+        """
+        time_list = self.bag_check.get_wait_time()
+        time = sum(time_list) 
+        time = time / len(time_list)
+        
     def get_security(self):  
         """
         get method to return access to security agent list to external classes
@@ -89,13 +99,4 @@ class Checkpoint(object):
         """ 
         get method to return the location at which this checkpoint exists
         """
-        return self.location    
-    
-    def average_wait_time(self):
-        """
-        calculates the average wait time for a specific checkpoint location
-        :return: integer value that represents average wait time
-        """
-        time_list = self.bag_check.get_wait_time()
-        time = sum(time_list) 
-        time = time / len(time_list)
+        return self.location 

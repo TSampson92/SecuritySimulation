@@ -63,14 +63,14 @@ class BagCheck:
                         attendee.status = 2
                         self.end_attendee_time(current_sim_time, attendee)
                         
-    def end_attendee_time(self, current_time, attendee):
+    def end_attendee_time(self, current_sim_time, attendee):
         """
         update the end time for attendee and add wait time to list 
-        :param current_time: time in seconds from start of simulation
+        :param current_sim_time: time in seconds from start of simulation
         :param attendee: attendee object passed in
         """
-        attendee.end_queue_time(current_time)
-        total_time = attendee.calc_total_wait(current_time) 
+        attendee.end_queue_time(current_sim_time)
+        total_time = attendee.calc_total_wait(current_sim_time) 
         self.wait_time.append(total_time)   # keep track of all attendees wait time
                     
     def get_bag_check_queue(self):
