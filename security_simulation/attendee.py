@@ -18,8 +18,11 @@ class Attendee(object):
         else:
             self.gender = False
 
+        # The percentage of metal that a person has on them, used to determine if this
+        # attendee will set off a metal detector at a checkpoint
         self.metal_percent = rand.normal(loc=metal_mean, scale=metal_std_dev)
-
+        # Determine if this attendee is cooperative, if the random value is less than coop chance 
+        # then this attendee is cooperative.
         if rand.rand() < coop_chance:
             self.isCooperative = True
         else:
@@ -39,6 +42,7 @@ class Attendee(object):
     _vectorized_attendee = N.vectorize(__init__)
    
     def vec_attendee (self, gender, metal_mean, metal_std_dev, coop_percent):
+        """Method to vectorize the attendee constructor"""
         return self._vectorized_attendee(gender, metal_mean, metal_std_dev, coop_percent)
     
    
@@ -67,7 +71,7 @@ class Attendee(object):
         checkpoint_distances = N.zeros(len(checkpoints), dtype=float)
 
         for i in range(len(checkpoints)):
-            checkpoint_line_len[i] = len(checkpoints[i].check_queue)
+            checkpoint_line_len[i] = checkpoints[i].get_line_length()
             checkpoint_distances[i] = self.calc_distance(checkpoints[i].location)
         
         min_length = N.min(checkpoint_line_len)
