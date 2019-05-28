@@ -22,7 +22,7 @@ class Model:
     current_time = 0
     closed_door_time = None
 
-    def __init__(self, checkpoint_positions, security_personnel_sets, checkpoint_configurations,
+    def __init__(self, security_personnel_sets,
                  attendee_number, gender_percentage, metal_mean, metal_std_dev, cooperative_chance,
                  closed_door_time=sys.maxsize):
         """Sets up the attendees, checkpoints, and the longest amount of time steps to run for based on the parameters.
@@ -39,8 +39,7 @@ class Model:
         """
 
         # Initialize the security check points.
-        event_checkpoints = Checkpoint.vecCheckPoint(checkpoint_positions, security_personnel_sets,
-                                                     checkpoint_configurations)
+        event_checkpoints = Checkpoint.vec_checkpoint(security_personnel_sets)
 
         # Create arrays with size of the number of attendees to make, with the arguments to pass in.
 
@@ -50,9 +49,8 @@ class Model:
         cooperative_chance_input = np.full(attendee_number, cooperative_chance)
 
         # Initialize the attendees.
-        attendee_set = Attendee.vecAttendee(gender_perc_input, metal_mean_input,
-                                            metal_std_dev_input, cooperative_chance_input)
-
+        attendee_set = Attendee.vec_attendee(gender_perc_input, metal_mean_input, metal_std_dev_input, cooperative_chance_input)
+        print(attendee_set)
         self.closed_door_time = closed_door_time
 
         # Start the simulation.

@@ -37,13 +37,10 @@ class Attendee(object):
         self.total_wait = 0
         self.status = 0 # 1= bag_check, 2 = metal detector
         self.checkpoint_target = None
-
-    
-    _vectorized_attendee = N.vectorize(__init__)
    
-    def vec_attendee (self, gender, metal_mean, metal_std_dev, coop_percent):
+    def vec_attendee(gender, metal_mean, metal_std_dev, coop_percent):
         """Method to vectorize the attendee constructor"""
-        return self._vectorized_attendee(gender, metal_mean, metal_std_dev, coop_percent)
+        return _vectorized_attendee(gender, metal_mean, metal_std_dev, coop_percent)
     
    
     def calc_distance(self, checkpoint_loc):
@@ -177,3 +174,6 @@ class Attendee(object):
             'check_point_target': self.checkpoint_target
         }
         return data
+
+
+_vectorized_attendee = N.vectorize(Attendee)

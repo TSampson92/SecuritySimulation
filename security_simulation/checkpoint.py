@@ -1,3 +1,4 @@
+import numpy as np
 import random as r
 # from security_simulation.security_agent import SecurityAgent
 # from security_simulation.bag_check import BagCheck
@@ -22,7 +23,11 @@ class Checkpoint(object):
         self.main_queue = []
         self.assign_roles()
         self.location = location
-        
+
+    def vec_checkpoint(security_roles_sets, bag_check_sets=None, num_metal_detectors_sets=0, locations=(0,0)):
+        """Method to vectorize the checkpoint constructor"""
+        return _vectorized_checkpoint(security_roles_sets, bag_check_sets, num_metal_detectors_sets, locations)
+
     def assign_roles(self):
         """
         pull apart the list passed in called security_roles
@@ -96,4 +101,5 @@ class Checkpoint(object):
         time = sum(time_list) 
         time = time/ len(time_list)
 
-    
+
+_vectorized_checkpoint = np.vectorize(Checkpoint)
