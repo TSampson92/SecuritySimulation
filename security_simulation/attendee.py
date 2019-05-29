@@ -6,10 +6,10 @@ from security_simulation.checkpoint import Checkpoint
 
 LOW_WALK_SPEED = 1.25
 HIGH_WALK_SPEED = 1.51
+
+
 class Attendee(object):
     # These values are in meters per second
-    
-    
 
     def __init__(self, gender, metal_mean, metal_std_dev, coop_chance, current_location=(0,0), time_entered=0, has_bag=False):
         # For gender, True == Female, False == Male
@@ -31,9 +31,10 @@ class Attendee(object):
         self.time_entered = time_entered
         self.bag_check_complete = False
         self.has_bag = has_bag
+        self.getting_bag_checked = False
         self.time_step_to_enqueue = 0  # find_checkpoint updates this value
         self.time_step_to_dequeue = 0
-        self.arrives_at_checkpoint = 0
+        self.arrives_at_checkpoint = None
         self.total_wait = 0
         self.status = 0 # 1= bag_check, 2 = metal detector
         self.checkpoint_target = None
