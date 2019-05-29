@@ -2,12 +2,13 @@ import numpy as N
 import numpy.random as rand
 
 
-from security_simulation.checkpoint import Checkpoint
+from sec_sim.checkpoint import Checkpoint
 
+# These values are in meters per second
 LOW_WALK_SPEED = 1.25
 HIGH_WALK_SPEED = 1.51
 class Attendee(object):
-    # These values are in meters per second
+    
 
 
     def __init__(self, gender, metal_mean, metal_std_dev, coop_chance, current_location=(0,0), time_entered=0, has_bag=False):
@@ -173,6 +174,12 @@ class Attendee(object):
             checkpoint in seconds.
         """
         return self.time_step_to_enqueue - self.time_entered
+    
+    def get_time_step_to_enqueue(self):
+        """
+        Returns the time step that an Attendee will reach their chosen checkpoint
+        """
+        return self.time_step_to_enqueue
 
     def to_dict(self):
         """

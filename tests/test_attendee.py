@@ -42,6 +42,13 @@ def test_attendee_wait_time():
     assert att_1.calc_total_wait(15) == 15
     assert att_2.calc_total_wait(35) == 30
     assert att_3.calc_total_wait(70) == 45
-    
+
+def test_attendee_is_at_checkpoint():
+    att_1 = Attendee(.5, 0.3, .25, .5)
+    check_1 = Checkpoint([], location=(0,2))
+    att_1.find_checkpoint([check_1])
+    att_1.update(att_1.get_time_step_to_enqueue())
+    assert att_1.current_location == check_1.get_location()
+
 
     
