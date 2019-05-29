@@ -75,7 +75,7 @@ class Attendee(object):
 
         for i in range(len(checkpoints)):
             checkpoint_line_len[i] = checkpoints[i].get_line_length()
-            checkpoint_distances[i] = self.calc_distance(checkpoints[i].location)
+            checkpoint_distances[i] = self._calc_distance(checkpoints[i].location)
         
         min_length = N.min(checkpoint_line_len)
         min_dist = N.min(checkpoint_distances)
