@@ -2,7 +2,7 @@ import numpy as N
 import numpy.random as rand
 
 
-from sec_sim.checkpoint import Checkpoint
+from security_simulation.checkpoint import Checkpoint
 
 # These values are in meters per second
 LOW_WALK_SPEED = 1.25
