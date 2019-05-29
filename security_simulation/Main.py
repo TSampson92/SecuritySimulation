@@ -47,9 +47,10 @@ COOPERATIVE_CHANCE = 0.9
 
 
 def __init__():
-    print("init start")
+    #print("init start")
     model = Model(SECURITY_PERSONNEL_SETS, CHECKPOINT_LOCATIONS,
-                  ATTENDEE_NUMBER, GENDER_PERCENTAGE, METAL_MEAN, METAL_STD_DEV, COOPERATIVE_CHANCE)
+                  ATTENDEE_NUMBER, GENDER_PERCENTAGE, METAL_MEAN, METAL_STD_DEV, COOPERATIVE_CHANCE,
+                  closed_door_time=100)
 
 if __name__ == "__main__":
     __init__()

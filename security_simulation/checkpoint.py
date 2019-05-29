@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from security_simulation.security_agent import SecurityAgent
 from security_simulation.bag_check import BagCheck
 # from security_agent import SecurityAgent
@@ -86,7 +87,7 @@ class Checkpoint(object):
                 elif index == 2:
                     agent = SecurityAgent(role='STANDING', gender=gender)
                 self.security_agent_list.append(agent)
-                print("at index:", index, "=", num_agents_of_type, agent.role)
+                #print("at index:", index, "=", num_agents_of_type, agent.role)
         self.bag_check = BagCheck(self.security_agent_list)
                   
     def add_attendee(self, attendee, current_sim_time):
@@ -120,12 +121,12 @@ class Checkpoint(object):
                 if agent.busy_until <= current_sim_time and attendee is not None:
                     # use busy until instead of current time because it will be an exact entrance time
                     attendee.total_wait = attendee.calc_total_wait(agent.busy_until)
-                    attendee.time_step_to_dequeue.end_queue_time(agent.busy_until)
+                    attendee.end_queue_time(agent.busy_until)
                     self.attendees_entered_event.append(agent.assigned_attendee)
                     # free agent up
                     agent.busy = False
                     agent.assigned_attendee = None
-            if agent.busy:  # agent is still busy:
+            if agent.busy or np.size(self.main_queue) == 0:  # agent is still busy:
                 pass  # do nothing
             else:
                 # grab first in line but to not pop yet
@@ -180,7 +181,7 @@ class Checkpoint(object):
         """
         time = self.__detector_time()
         if not cooperative:
-            time += self.not_cooperative_time
+            time += self.not_cooperative_time()
         if metal_percent >= self.detection_threshold:
             if metal_action == 'WAND':
                 time += self.__wand_time()
