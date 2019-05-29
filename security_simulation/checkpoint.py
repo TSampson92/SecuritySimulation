@@ -97,7 +97,6 @@ class Checkpoint(object):
         :return: length of queue int
         """
         self.main_queue.append(attendee)
-        attendee.start_queue_time(current_sim_time)  # the time attendee has entered queue
         return len(self.main_queue)
 
     def __pop_first_attendee(self):

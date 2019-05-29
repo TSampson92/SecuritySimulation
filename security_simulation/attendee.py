@@ -85,6 +85,8 @@ class Attendee(object):
         # Same idea for the distances
         if (min_dist > 0):
             checkpoint_ratios = checkpoint_distances / min_dist
+        else:
+            checkpoint_ratios = checkpoint_distances
         
         # Add these values together, and choose the smallest value
         checkpoint_rankings = checkpoint_ratios + checkpoint_line_len
