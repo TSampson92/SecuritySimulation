@@ -8,7 +8,7 @@ from bag_check import BagCheck
 
 class Checkpoint(object):
     
-    def __init__(self, security_roles, bag_check=None, num_metal_detectors=0, location=(0,0)):
+    def __init__(self, security_roles, location=(0,0)):
         """
         initializes checkpoint object
         :param security_roles: [bag checkers, person/metal detector, person after detector]
@@ -18,15 +18,9 @@ class Checkpoint(object):
         self.security_agent_list = []
         self.metal_queue = []
         self.security_roles = security_roles
-        self.bag_check = bag_check
-        self.num_metal_detectors = num_metal_detectors
         self.main_queue = []
         self.assign_roles()
         self.location = location
-
-    def vec_checkpoint(security_roles_sets, bag_check_sets=None, num_metal_detectors_sets=0, locations=(0,0)):
-        """Method to vectorize the checkpoint constructor"""
-        return _vectorized_checkpoint(security_roles_sets, bag_check_sets, num_metal_detectors_sets, locations)
 
     def assign_roles(self):
         """
@@ -100,6 +94,3 @@ class Checkpoint(object):
         time_list = self.bag_check.get_wait_time()
         time = sum(time_list) 
         time = time/ len(time_list)
-
-
-_vectorized_checkpoint = np.vectorize(Checkpoint)

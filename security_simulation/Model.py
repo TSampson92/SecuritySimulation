@@ -22,7 +22,7 @@ class Model:
     current_time = 0
     closed_door_time = None
 
-    def __init__(self, security_personnel_sets,
+    def __init__(self, security_personnel_sets, checkpoint_locations,
                  attendee_number, gender_percentage, metal_mean, metal_std_dev, cooperative_chance,
                  closed_door_time=sys.maxsize):
         """Sets up the attendees, checkpoints, and the longest amount of time steps to run for based on the parameters.
@@ -39,7 +39,10 @@ class Model:
         """
 
         # Initialize the security check points.
-        event_checkpoints = Checkpoint.vec_checkpoint(security_personnel_sets)
+        event_checkpoints = np.empty(np.shape(checkpoint_locations)[0], dtype=object)
+
+        for i in np.arange(np.size(event_checkpoints)):
+            event_checkpoints[i] = Checkpoint(security_personnel_sets[i], checkpoint_locations[i])
 
         # Create arrays with size of the number of attendees to make, with the arguments to pass in.
 
