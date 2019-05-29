@@ -1,4 +1,5 @@
 import random
+from security_simulation.security_agent import SecurityAgent
 
 
 class BagCheck:
@@ -9,25 +10,25 @@ class BagCheck:
         :param base_search_time: minimum time it takes to search a bag
         :param search_time_variance: max number to add onto base search time
         """
-        self.security_personnel = security_personnel
-        self.metal_detector_queue = []     
+        self.security_personnel = []
+        # to reduce looping bag check only needs to know about bag checkers
+        for person in security_personnel:
+            if person.role == 'BAG_CHECK':
+                self.security_personnel.append(person)
+
         self.main_queue = []
         self.wait_time = []
         self.bag_check_time = lambda: base_search_time + \
                                       random.randint(0, search_time_variance)
         self.metal_detector_time = base_search_time + random.randint(0, 15)
-        
-    # Function will cycle through all the security, assigning each one an attendee
-    # from the following queues: the main queue and the metal_detector_queue
-    # Security will only be assigned an attendee if they are not busy
-    # If security is currently busy, check to see if they need to be freed from attendee
-    # Once attendee is popped from metal_detector_queue store their wait time in self.wait_time[]
-    def cycle_queues(self, main_queue, metal_queue, current_sim_time):
+
+    def update(self, queue, num_to_search, current_sim_time):
         """
-        Core function that cycles through queues updating attendee and security info
-        :param main_queue: Queue of attendees waiting for bag check
-        :param metal_queue: Queue of attendees waiting for metal detector
-        :param current_sim_time: current time of the simulation
+
+        :param queue:
+        :param num_to_search:
+        :param current_sim_time:
+        :return:
         """
         self.metal_detector_queue = metal_queue
         self.main_queue = main_queue

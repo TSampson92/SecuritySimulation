@@ -3,6 +3,10 @@ class SecurityAgent:
     ROLES = frozenset(['PATDOWN', 'WAND', 'BAG_CHECK', 'METAL_DETECTOR', 'STANDARD', 'STANDING'])
 
     def __init__(self, role='PATDOWN', gender=None):
+        """
+        :param role: 'PATDOWN', 'WAND', 'BAG_CHECK', 'METAL_DETECTOR', 'STANDARD', 'STANDING'
+        :param gender: F or M
+        """
         self.busy = False
         self.busy_until = 0  # time value that agent is free
         self.gender = gender # "F" = female, "M" = male
