@@ -93,7 +93,7 @@ class Checkpoint(object):
         """
         adds an attendee to a specific checkpoint queue
         :param attendee: attendee object to add to queue
-        :param current_sim_time: current time of the simuddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddlation
+        :param current_sim_time: current time of the simulation
         :return: length of queue int
         """
         self.main_queue.append(attendee)
