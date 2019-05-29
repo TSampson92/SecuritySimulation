@@ -8,9 +8,8 @@ setup(name='security_simulation',
       author='Michael, Nick, Sahj, Torren',
       packages=['security_simulation'],
       install_requires=[
-          'numpy'
-      ],
-      tests_require=[
-          'pytest'
+          'numpy',
+          'pytest',
+          'flake8'
       ],
       zip_safe=False)
