@@ -1,4 +1,4 @@
-import random as r
+import random
 from security_simulation.security_agent import SecurityAgent
 from security_simulation.bag_check import BagCheck
 # from security_agent import SecurityAgent
@@ -6,26 +6,54 @@ from security_simulation.bag_check import BagCheck
 
 
 class Checkpoint(object):
-    
-    def __init__(self, security_roles, bag_check=None, num_metal_detectors=0, location=(0, 0), attendees_entered_event_ref=None):
+    # constants for check times
+    BASE_METAL_TIME = 5
+    METAL_VARIANCE = 7
+
+    BASE_WAND_TIME = 10
+    WAND_VARIANCE = 10
+
+    BASE_PATDOWN_TIME = 10
+    PATDOWN_VARIANCE = 20
+
+    def __init__(self,
+                 security_roles,
+                 location=(0, 0),
+                 attendees_entered_event_ref=None,
+                 detection_threshold=60,
+                 not_coop_base=5,
+                 not_coop_var=10,
+                 metal_action='WAND',
+                 num_to_bag_check=3):
         """
-        initializes checkpoint object
-        :param security_roles: [bag checkers, person/metal detector, person after detector]
-        :param bag_check: will be setting this bag_check value later
-        :num_metal_detectors: will be setting this num_metal_detectors value later
+        Handles a single security checkpoint at an event
+        :param security_roles:[bag checkers, person/metal detector, person after detector]
+        :param location: location of checkpoint
+        :param attendees_entered_event_ref: list to store attendees inside event past security
+        :param detection_threshold: level of metal that sets of the metal detector
+        :param not_coop_base: base time added for attendees not cooperating
+        :param not_coop_var: max variance not cooperating time added to base
+        :param metal_action: action taken when attendee sets off detector PATDOWN or WAND
+        :param num_to_bag_check: number of attendees back from the front of the line who may bet their bags checked
         """
         self.security_agent_list = []
         self.metal_detector_agents = []  # keep an extra ref to metal detector agents for efficiency
         self.security_roles = security_roles
-        self.bag_check = bag_check
-        self.num_metal_detectors = num_metal_detectors
         self.main_queue = []
+        self.metal_action = metal_action
+        self.detection_threshold = detection_threshold
         self.location = location
+        # assigned in assign_roles
+        self.bag_check = None
+        self.num_metal_detectors = None
         self.assign_roles()
+
+        self.num_to_bag_check = num_to_bag_check
         self.attendees_entered_event = attendees_entered_event_ref
         # replace with empty list when left empty for testing
         if self.attendees_entered_event is None:
             self.attendees_entered_event = []
+        self.not_cooperative_time = lambda: random.randint(not_coop_base, not_coop_base + not_coop_var)
 
     # Security personnel are instantiated and are assigned roles based on input
     # index 0 refers to num of security for bag check
@@ -45,7 +73,7 @@ class Checkpoint(object):
             # index 1 refers to num security in metal detector
             # index 2 refers num of security after detector
             for i in range(num_agents_of_type):
-                if r.random() < .50:
+                if random.random() < .50:
                     gender = "M"
                 else:
                     gender = "F"
@@ -72,13 +100,25 @@ class Checkpoint(object):
         attendee.start_queue_time(current_sim_time)  # the time attendee has entered queue
         return len(self.main_queue)
 
+    def __pop_first_attendee(self):
+        """
+        get and remove first attendee in line
+        :return: first attendee in queue
+        """
+        return self.main_queue.pop(0)
+
     def metal_detector_update_cycle(self, current_sim_time):
+        """
+        Perform metal detection on first attendee in line
+        admits attendees to events when they have been checked
+        :param current_sim_time:
+        :return:
+        """
         for agent in self.metal_detector_agents:
             # see if agent is ready to admit attendee
             if agent.busy:
-                if agent.busy_until < current_sim_time:
-                    # admit attendee to event
-                    attendee = agent.assigned_attendee
+                attendee = agent.get_attendee()
+                if agent.busy_until <= current_sim_time and attendee is not None:
                     # use busy until instead of current time because it will be an exact entrance time
                     attendee.total_wait = attendee.calc_total_wait(agent.busy_until)
                     attendee.time_step_to_dequeue.end_queue_time(agent.busy_until)
@@ -86,21 +126,22 @@ class Checkpoint(object):
                     # free agent up
                     agent.busy = False
                     agent.assigned_attendee = None
-            if agent.busy: # agent is still busy:
-                pass
+            if agent.busy:  # agent is still busy:
+                pass  # do nothing
             else:
                 # grab first in line but to not pop yet
                 first_in_line = self.main_queue[0]
+                # check bag status
                 if first_in_line.has_bag:
-                    if first_in_line.bag_check_complete:
-                        pass
-                    else:
+                    if not first_in_line.bag_check_complete:
                         # not finished bag check so can't be metal detected
                         break
-                else:
-
-    def bag_check_update_cycle(self, current_sim_time):
-        pass
+                # calc time it will take
+                detector_time = self.get_total_detector_time(first_in_line.isCooperative, first_in_line.metal_percent, self.metal_action)
+                # give attendee to agent
+                agent.set_attendee(self.__pop_first_attendee())
+                agent.busy = True
+                agent.busy_until = current_sim_time + detector_time
     
     def update(self, current_sim_time):
         """
@@ -108,7 +149,7 @@ class Checkpoint(object):
         and pops attendee's that are finished waiting
         :param current_sim_time: current time of the simulation
         """
-        self.bag_check_update_cycle(current_sim_time)
+        self.bag_check.update(self.main_queue, self.num_to_bag_check, current_sim_time)
         self.metal_detector_update_cycle(current_sim_time)
 
     def average_wait_time(self):
@@ -138,3 +179,42 @@ class Checkpoint(object):
         get method to return the location at which this checkpoint exists
         """
         return self.location
+
+    def get_total_detector_time(self, cooperative, metal_percent, metal_action):
+        """
+        calculate time it will take for attendee to go through detector
+        :param cooperative: attendee isCooperative
+        :param metal_percent: attendee metal_percent
+        :param metal_action: checkpoint metal action PATDOWN or WAND
+        :return: seconds: int
+        """
+        time = self.__detector_time()
+        if not cooperative:
+            time += self.not_cooperative_time
+        if metal_percent >= self.detection_threshold:
+            if metal_action == 'WAND':
+                time += self.__wand_time()
+            elif metal_action == 'PATDOWN':
+                time += self.__patdown_time()
+        return time
+
+    @staticmethod
+    def __detector_time():
+        """
+        :return:
+        """
+        return random.randint(Checkpoint.BASE_METAL_TIME, Checkpoint.BASE_METAL_TIME + Checkpoint.METAL_VARIANCE)
+
+    @staticmethod
+    def __wand_time():
+        """
+        :return:
+        """
+        return random.randint(Checkpoint.BASE_WAND_TIME, Checkpoint.BASE_WAND_TIME + Checkpoint.WAND_VARIANCE)
+
+    @staticmethod
+    def __patdown_time():
+        """
+        :return:
+        """
+        return random.randint(Checkpoint.BASE_PATDOWN_TIME, Checkpoint.BASE_PATDOWN_TIME + Checkpoint.PATDOWN_VARIANCE)

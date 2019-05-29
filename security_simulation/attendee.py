@@ -31,6 +31,7 @@ class Attendee(object):
         self.time_entered = time_entered
         self.bag_check_complete = False
         self.has_bag = has_bag
+        self.getting_bag_checked = False
         self.time_step_to_enqueue = 0  # find_checkpoint updates this value
         self.time_step_to_dequeue = 0
         self.arrives_at_checkpoint = None

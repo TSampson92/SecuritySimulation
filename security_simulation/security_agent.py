@@ -48,4 +48,4 @@ class SecurityAgent:
         getter method to retrieve the attendee that was assigned to security
         :return: returns the attendee assigned to a security person
         """
-        return self.assigned_attendee   
+        return self.assigned_attendee
