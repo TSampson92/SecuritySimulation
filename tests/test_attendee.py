@@ -45,10 +45,13 @@ def test_attendee_wait_time():
 
 def test_attendee_is_at_checkpoint():
     att_1 = Attendee(.5, 0.3, .25, .5)
-    check_1 = Checkpoint([], location=(0,2))
+    check_1 = Checkpoint([], location=(6,8))
     att_1.find_checkpoint([check_1])
+    print("Time it takes attendee to make it to checkpoint: "\
+         + str(att_1.get_time_step_to_enqueue()))
     att_1.update(att_1.get_time_step_to_enqueue())
     assert att_1.current_location == check_1.get_location()
+    assert check_1.get_line_length() == 1
 
 
     
