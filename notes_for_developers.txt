@@ -1,20 +1,20 @@
 Tips for keeping the project running smoothly:
 
 Things to remember about Git... PROBABLY MOST IMPORTANT:
-    - Ask for help if unsure
     - Always pull the latest before doing any work
     - Always merge master into your local branch before pushing
-      so that you can resolve conflicts locally an quietly
-    - preferably we always work on a separate branch than master
-      then merge our code after a pull request
+      so conflicts can be resolved locally and quietly
+    - preferably always work on a separate branch,
+      then merge code into master after a pull request
     - be cautious when resolving conflicts
     - Tools like PyCharm can make it a lot easier to resolve conflicts
     - Doing a diff between branches can be super helpful
+    - Be careful with anything other than commit, push, and pull 
 
 Things to remember about packages:
     - This project is a package
     - Never use relative imports
-    - Instead do this from package.module import class
+    - Instead do use this format -> from package.module import class
         e.g security_simulation.security_agent import SecurityAgent
     - when using an IDE like PyCharm mark security_simulation directory as
       sources root
@@ -31,6 +31,7 @@ TESTING
     PyCharm: go to Settings-->Python integrated tools --> Testing(subsection)
              change default test runner to pytest (pytest needs to be installed
              in your project's interpreter)
+    Run pytest from commandline or from PyCharm in project directory
 
 Things to remember about python:
     - Flake8 is your friend https://pypi.org/project/flake8/ it makes it easy
