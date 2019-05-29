@@ -49,7 +49,7 @@ class Attendee(object):
         """Method to vectorize the attendee constructor"""
         return _vectorized_attendee(gender, metal_mean, metal_std_dev, coop_percent)
 
-    def calc_distance(self, checkpoint_loc):
+    def _calc_distance(self, checkpoint_loc):
         """ Calculates the distance between this attendee and a checkpoint. 
             This is used by the find_checkpoint method as a factor in determining 
             which checkpoint an attendee will go to.
@@ -75,7 +75,7 @@ class Attendee(object):
 
         for i in range(len(checkpoints)):
             checkpoint_line_len[i] = checkpoints[i].get_line_length()
-            checkpoint_distances[i] = self.calc_distance(checkpoints[i].location)
+            checkpoint_distances[i] = self._calc_distance(checkpoints[i].location)
         
         min_length = N.min(checkpoint_line_len)
         min_dist = N.min(checkpoint_distances)
@@ -93,10 +93,10 @@ class Attendee(object):
         min_index = N.argmin(checkpoint_rankings)
         # found the target checkpoint, set that as the target_checkpoint
         self.checkpoint_target = checkpoints[min_index]
-        self.calc_checkpoint_arrival(checkpoint_distances[min_index])
+        self._calc_checkpoint_arrival(checkpoint_distances[min_index])
         return self.checkpoint_target
 
-    def calc_checkpoint_arrival(self, distance):
+    def _calc_checkpoint_arrival(self, distance):
         """ Calculate the time step that an attendee arrives at their target checkpoint 
             distance: the distance in meters from attendee's spawn to the checkpoint
             Generates a random speed in mps from average walking speeds"""
@@ -125,7 +125,7 @@ class Attendee(object):
         """
         self.time_step_to_dequeue = time
 
-    def arrived_at_checkpoint(self, current_time):
+    def _arrived_at_checkpoint(self, current_time):
         """Check if the current attendee should be moved to the checkpoint 
 
         :param current_time: current timestep to check against
@@ -148,7 +148,7 @@ class Attendee(object):
             True if the attendee has arrived, the attendee is now in their target checkpoint
             False if they have not, nothing else happens
         """
-        if self.arrived_at_checkpoint(time_step):
+        if self._arrived_at_checkpoint(time_step):
             self.checkpoint_target.add_attendee(self, time_step)
             self.current_location = self.checkpoint_target.get_location()
             return True
