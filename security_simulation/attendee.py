@@ -1,16 +1,13 @@
 import numpy as N
 import numpy.random as rand
 
-
 from security_simulation.checkpoint import Checkpoint
 
-# These values are in meters per second
 LOW_WALK_SPEED = 1.25
 HIGH_WALK_SPEED = 1.51
+
+
 class Attendee(object):
-    
-
-
     def __init__(self, gender, metal_mean, metal_std_dev, coop_chance, current_location=(0,0), time_entered=0, has_bag=False):
         """
         Defines the behavior and state of an attendee
@@ -45,14 +42,13 @@ class Attendee(object):
         self.time_step_to_enqueue = 0  # find_checkpoint updates this value
         self.time_step_to_dequeue = 0
         self.total_wait = 0
-        self.status = 0 # 1= bag_check, 2 = metal detector
+        self.status = 0  # 1= bag_check, 2 = metal detector
         self.checkpoint_target = None
    
     def vec_attendee(gender, metal_mean, metal_std_dev, coop_percent):
         """Method to vectorize the attendee constructor"""
         return _vectorized_attendee(gender, metal_mean, metal_std_dev, coop_percent)
-    
-   
+
     def calc_distance(self, checkpoint_loc):
         """ Calculates the distance between this attendee and a checkpoint. 
             This is used by the find_checkpoint method as a factor in determining 
@@ -135,7 +131,7 @@ class Attendee(object):
         Returns True if the current time step == this attendee's checkpoint arrival time
         Returns False if not
         """
-        if (current_time == self.time_step_to_enqueue):
+        if current_time == self.time_step_to_enqueue:
             return True
         
         return False
