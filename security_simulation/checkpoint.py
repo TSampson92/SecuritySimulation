@@ -97,7 +97,6 @@ class Checkpoint(object):
         :return: length of queue int
         """
         self.main_queue.append(attendee)
-        attendee.start_queue_time(current_sim_time)  # the time attendee has entered queue
         return len(self.main_queue)
 
     def __pop_first_attendee(self):
@@ -151,15 +150,6 @@ class Checkpoint(object):
         """
         self.bag_check.update(self.main_queue, self.num_to_bag_check, current_sim_time)
         self.metal_detector_update_cycle(current_sim_time)
-
-    def average_wait_time(self):
-        """
-        calculates the average wait time for a specific checkpoint location
-        :return: integer value that represents average wait time
-        """
-        time_list = self.bag_check.get_wait_time()
-        time = sum(time_list)
-        time = time / len(time_list)
 
     def get_security(self):  
         """
