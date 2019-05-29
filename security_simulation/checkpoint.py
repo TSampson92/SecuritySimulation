@@ -93,7 +93,7 @@ class Checkpoint(object):
         """
         adds an attendee to a specific checkpoint queue
         :param attendee: attendee object to add to queue
-        :param current_sim_time: current time of the simuddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddlation
+        :param current_sim_time: current time of the simulation
         :return: length of queue int
         """
         self.main_queue.append(attendee)
@@ -120,7 +120,7 @@ class Checkpoint(object):
                 if agent.busy_until <= current_sim_time and attendee is not None:
                     # use busy until instead of current time because it will be an exact entrance time
                     attendee.total_wait = attendee.calc_total_wait(agent.busy_until)
-                    attendee.time_step_to_dequeue.end_queue_time(agent.busy_until)
+                    attendee.end_queue_time(agent.busy_until)
                     self.attendees_entered_event.append(agent.assigned_attendee)
                     # free agent up
                     agent.busy = False
@@ -180,7 +180,7 @@ class Checkpoint(object):
         """
         time = self.__detector_time()
         if not cooperative:
-            time += self.not_cooperative_time
+            time += self.not_cooperative_time()
         if metal_percent >= self.detection_threshold:
             if metal_action == 'WAND':
                 time += self.__wand_time()
