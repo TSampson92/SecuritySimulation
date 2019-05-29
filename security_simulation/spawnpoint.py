@@ -21,22 +21,32 @@ class SpawnPoint(object):
         self.spawn_chance = spawn_chance
         self.spawn_more_than_one_chance = spawn_more_than_one_chance
         self.attendee_init_params = attendee_init_params
+        self.attendee_gender_per = attendee_init_params[0]
+        self.attendee_metal_mean = attendee_init_params[1]
+        self.attendee_metal_std_dev = attendee_init_params[2]
+        self.attendee_coop_chance = attendee_init_params[3]
         self.max_spawn = max_spawn
         self.location = location
 
     
     def spawn_attendee(self, current_time_step):
+        """
+        Called at each timestep at a Spawnpoint to spawn between 0 and self.max_spawn attendees. 
+        If an attendee is spawned, there is another chance that more than one will be spawned.
+        :param current_time_step: The current timestep of the simulation. This will be the simulation 
+                                  time for all attendees spawned in this call of the method
+        """
         spawned_attendies = []
-        if rand.random() > self.spawn_chance:
-            if (rand.random() > self.spawn_more_than_one_chance):
+        if rand.random() < self.spawn_chance:
+            if (rand.random() < self.spawn_more_than_one_chance):
                 num_to_spawn = rand.randint(2, self.max_spawn)
             else:
                 num_to_spawn = 1
             for i in range(num_to_spawn):
-                enter_ye = Attendee(self.attendee_init_params[0],\
-                                    self.attendee_init_params[1],\
-                                    self.attendee_init_params[2],\
-                                    self.attendee_init_params[3],\
+                enter_ye = Attendee(self.attendee_gender_per,\
+                                    self.attendee_metal_mean,\
+                                    self.attendee_metal_std_dev,\
+                                    self.attendee_coop_chance,\
                                     current_location=self.location,\
                                     time_entered=current_time_step,\
                                     has_bag=rand.randint(0,1))
