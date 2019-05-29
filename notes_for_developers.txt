@@ -1,5 +1,14 @@
 Tips for keeping the project running smoothly:
 
+Things to remember about Git... PROBABLY MOST IMPORTANT:
+    - Ask for help if unsure
+    - Always pull the latest before doing any work
+    - Always merge master into your local branch before pushing
+      so that you can resolve conflicts locally an quietly
+    - preferably we always work on a separate branch than master
+      then merge our code after a pull request
+    - be cautious when resolving conflicts
+
 Things to remember about packages:
     - This project is a package
     - Never use relative imports
