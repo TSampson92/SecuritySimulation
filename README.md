@@ -5,4 +5,8 @@ An Agent-Based model of different event security configurations for Tacoma Dome*
 
 -------- INSTALL --------  
 from SecuritySimulation directory  
-run command "pip install ."   
+in a terminal run command "pip install ."   
+
+-------- TESTS --------  
+from SecuritySimulation directory  
+in a terminal run command "pytest"
