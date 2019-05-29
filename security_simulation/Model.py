@@ -50,9 +50,11 @@ class Model:
         metal_mean_input = np.full(attendee_number, metal_mean)
         metal_std_dev_input = np.full(attendee_number, metal_std_dev)
         cooperative_chance_input = np.full(attendee_number, cooperative_chance)
+        attendee_ids = np.arange(attendee_number) + 1
+        
 
         # Initialize the initial attendees.
-        self.attendee_set = Attendee.vec_attendee(gender_perc_input, metal_mean_input, metal_std_dev_input, cooperative_chance_input)
+        self.attendee_set = Attendee.vec_attendee(gender_perc_input, metal_mean_input, metal_std_dev_input, cooperative_chance_input, attendee_ids)
 
         # Let the initial attendees find their preferred line.
         for attendee in self.attendee_set:
@@ -72,7 +74,7 @@ class Model:
         # While there are attendees still waiting to get in
         # AND the simulation should not be stopped due to time constraints, run the simulation.
         while np.size(self.attendee_set) > 0 and self.current_time < self.closed_door_time:
-            print(self.current_time)
+            print("******** Current time:", self.current_time, "********")
             # For each checkpoint, simulate its state at this time step.
             for checkpoint_index in np.arange(np.size(self.event_checkpoints)):
                 current_checkpoint = self.event_checkpoints[checkpoint_index]

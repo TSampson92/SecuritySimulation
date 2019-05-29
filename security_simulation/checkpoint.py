@@ -98,6 +98,7 @@ class Checkpoint(object):
         :return: length of queue int
         """
         self.main_queue.append(attendee)
+        print("Attendee added, queue length now:", len(self.main_queue))
         return len(self.main_queue)
 
     def __pop_first_attendee(self):
@@ -105,6 +106,7 @@ class Checkpoint(object):
         get and remove first attendee in line
         :return: first attendee in queue
         """
+        print("Removed attendee", self.main_queue[0].attendee_id, "from front of queue at checkpoint location:", self.location)
         return self.main_queue.pop(0)
 
     def metal_detector_update_cycle(self, current_sim_time):
@@ -125,6 +127,7 @@ class Checkpoint(object):
                     self.attendees_entered_event.append(agent.assigned_attendee)
                     # free agent up
                     agent.busy = False
+                    print("Attendee:", attendee.attendee_id, "entered")
                     agent.assigned_attendee = None
             if agent.busy or np.size(self.main_queue) == 0:  # agent is still busy:
                 pass  # do nothing

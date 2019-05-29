@@ -8,7 +8,7 @@ HIGH_WALK_SPEED = 1.51
 
 
 class Attendee(object):
-    def __init__(self, gender, metal_mean, metal_std_dev, coop_chance, current_location=(0,0), time_entered=0, has_bag=False):
+    def __init__(self, gender, metal_mean, metal_std_dev, coop_chance, attendee_id, current_location=(0,0), time_entered=0, has_bag=False):
         """
         Defines the behavior and state of an attendee
         :param gender: gender distribution, float in range [0,1]
@@ -44,10 +44,11 @@ class Attendee(object):
         self.total_wait = 0
         self.status = 0  # 1= bag_check, 2 = metal detector
         self.checkpoint_target = None
+        self.attendee_id = attendee_id
    
-    def vec_attendee(gender, metal_mean, metal_std_dev, coop_percent):
+    def vec_attendee(gender, metal_mean, metal_std_dev, coop_percent, attendee_id):
         """Method to vectorize the attendee constructor"""
-        return _vectorized_attendee(gender, metal_mean, metal_std_dev, coop_percent)
+        return _vectorized_attendee(gender, metal_mean, metal_std_dev, coop_percent, attendee_id)
 
     def _calc_distance(self, checkpoint_loc):
         """ Calculates the distance between this attendee and a checkpoint. 
@@ -150,6 +151,8 @@ class Attendee(object):
         """
         if self._arrived_at_checkpoint(time_step):
             self.checkpoint_target.add_attendee(self, time_step)
+            print("Attendee", self.attendee_id, "at:", self.current_location, \
+                "has moved to checkpoint at:", self.checkpoint_target.get_location())
             self.current_location = self.checkpoint_target.get_location()
             return True
         
