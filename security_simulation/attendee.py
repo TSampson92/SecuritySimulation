@@ -6,10 +6,10 @@ from security_simulation.checkpoint import Checkpoint
 
 LOW_WALK_SPEED = 1.25
 HIGH_WALK_SPEED = 1.51
-
-
 class Attendee(object):
     # These values are in meters per second
+    
+    
 
     def __init__(self, gender, metal_mean, metal_std_dev, coop_chance, current_location=(0,0), time_entered=0, has_bag=False):
         # For gender, True == Female, False == Male
@@ -31,10 +31,9 @@ class Attendee(object):
         self.time_entered = time_entered
         self.bag_check_complete = False
         self.has_bag = has_bag
-        self.getting_bag_checked = False
         self.time_step_to_enqueue = 0  # find_checkpoint updates this value
         self.time_step_to_dequeue = 0
-        self.arrives_at_checkpoint = None
+        self.arrives_at_checkpoint = 0
         self.total_wait = 0
         self.status = 0 # 1= bag_check, 2 = metal detector
         self.checkpoint_target = None
@@ -154,24 +153,6 @@ class Attendee(object):
             return True
         
         return False
-    
-    def get_waiting_in_line(self):
-        """
-        Return the time the attendee spent waiting in line
-        Returns:
-            An integer that represents the time that the attendee spent in the
-            checkpoint line in seconds
-        """
-        return self.time_step_to_dequeue - self.time_step_to_enqueue
-
-    def get_time_walking(self):
-        """
-        Returns how long it took for the attendee to walk to their chosen checkpoint
-        Return:
-            An integer that represents the time that the attendee spent walking to the 
-            checkpoint in seconds.
-        """
-        return self.arrives_at_checkpoint - self.time_entered
 
     def to_dict(self):
         """
@@ -193,5 +174,6 @@ class Attendee(object):
             'check_point_target': self.checkpoint_target
         }
         return data
+
 
 _vectorized_attendee = N.vectorize(Attendee)
