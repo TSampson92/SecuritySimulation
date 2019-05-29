@@ -39,10 +39,10 @@ class Model:
         """
 
         # Initialize the security check points.
-        event_checkpoints = np.empty(np.shape(checkpoint_locations)[0], dtype=object)
+        self.event_checkpoints = np.empty(np.shape(checkpoint_locations)[0], dtype=object)
 
-        for i in np.arange(np.size(event_checkpoints)):
-            event_checkpoints[i] = Checkpoint(security_personnel_sets[i], checkpoint_locations[i])
+        for i in np.arange(np.size(self.event_checkpoints)):
+            self.event_checkpoints[i] = Checkpoint(security_personnel_sets[i], checkpoint_locations[i])
 
         # Create arrays with size of the number of attendees to make, with the arguments to pass in.
 
@@ -52,8 +52,7 @@ class Model:
         cooperative_chance_input = np.full(attendee_number, cooperative_chance)
 
         # Initialize the attendees.
-        attendee_set = Attendee.vec_attendee(gender_perc_input, metal_mean_input, metal_std_dev_input, cooperative_chance_input)
-        print(attendee_set)
+        self.attendee_set = Attendee.vec_attendee(gender_perc_input, metal_mean_input, metal_std_dev_input, cooperative_chance_input)
         self.closed_door_time = closed_door_time
 
         # Start the simulation.
