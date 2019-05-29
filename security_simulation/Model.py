@@ -56,8 +56,9 @@ class Model:
         self.closed_door_time = closed_door_time
 
         # Start the simulation.
+        self._sim_loop()
 
-    def sim_loop(self):
+    def _sim_loop(self):
         """
 
         :return:
