@@ -1,0 +1,28 @@
+Tips for keeping the project running smoothly:
+
+Things to remember about packages:
+    - This project is a package
+    - Never use relative imports
+    - Instead do this from package.module import class
+        e.g security_simulation.security_agent import SecurityAgent
+    - when using an IDE like PyCharm mark security_simulation directory as
+      sources root
+    - when running from command line or Canopy you must pip install the package
+      every time a change is made, see below for instructions
+
+HOW TO INSTALL THIS PROJECT:
+ 1. from a terminal change directories to SecuritySimulation
+ 2.  run command 'pip install .'
+
+TESTING
+    Install pytest
+    Terminal: should already be installed if you pip installed the package
+    PyCharm: go to Settings-->Python integrated tools --> Testing(subsection)
+             change default test runner to pytest (pytest needs to be installed
+             in your project's interpreter)
+
+Things to remember about python:
+    - Flake8 is your friend https://pypi.org/project/flake8/ it makes it easy
+      to follow proper python style and syntax
+    - PyCharm makes your life so much easier https://www.jetbrains.com/pycharm/download
+    - Any question about style go here https://www.python.org/dev/peps/pep-0008/
