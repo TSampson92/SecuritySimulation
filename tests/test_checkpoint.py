@@ -1,5 +1,8 @@
 from security_simulation.checkpoint import Checkpoint
 from security_simulation.attendee import Attendee
+from security_simulation.security_agent import SecurityAgent
+
+# TODO write bag_check test before completeing these tests
 
 
 def test_checkpoint_creation():
@@ -58,16 +61,63 @@ def test_pop_attendees():
 
 
 def test_metal_detector():
+    """ test running 10 attendees with no bags through the metal detector"""
     current_time = 1
     checkpoint = get_std_test_checkpoint()
     attendees = get_test_attendees()
+    # ensure correct security agent manning metal detector
+    assert len(checkpoint.metal_detector_agents) == 1
+    assert isinstance(checkpoint.metal_detector_agents[0], SecurityAgent)
+    assert checkpoint.metal_detector_agents[0].role == 'METAL_DETECTOR'
+    # add attendees
+    first_attendee = attendees[0]
     for i in range(len(attendees)):
         attendees[i].has_bag = False
         checkpoint.add_attendee(attendees[i], current_time)
     assert len(checkpoint.main_queue) == 10
+
+    # run single update cycle
     current_time += 1
     checkpoint.metal_detector_update_cycle(current_time)
+
+    # ensure attendee was assigned to metal detector security agent
     assert len(checkpoint.main_queue) == 9
+    assert checkpoint.metal_detector_agents[0].get_attendee() is first_attendee
+    assert checkpoint.metal_detector_agents[0].busy
+    assert checkpoint.metal_detector_agents[0].busy_until > 0
+
+    # control time step attendee should exit
+    checkpoint.metal_detector_agents[0].busy_until = 10
+    second_attendee = checkpoint.main_queue[0]
+    current_time += 1
+    checkpoint.metal_detector_update_cycle(current_time)
+    assert len(checkpoint.attendees_entered_event) == 0
+
+    # ensure first in line is still first after one cycle
+    assert second_attendee == checkpoint.main_queue[0]
+    current_time = 10
+    checkpoint.metal_detector_update_cycle(current_time)
+
+    # assert next assigned attendee was second in line
+    assert checkpoint.metal_detector_agents[0].get_attendee() is second_attendee
+
+    # make sure first attendee entered the event
+    assert len(checkpoint.attendees_entered_event) == 1
+    assert checkpoint.attendees_entered_event[0] is first_attendee
+
+    # call update until queue is empty
+    while len(checkpoint.main_queue) > 0:
+        current_time += 1
+        checkpoint.metal_detector_update_cycle(current_time)
+
+    # finish detecting last attendee
+    while checkpoint.metal_detector_agents[0].busy:
+        current_time += 1
+        checkpoint.metal_detector_update_cycle(current_time)
+
+    # make sure all entered event and in right order
+    assert len(checkpoint.attendees_entered_event) == 10
+    assert checkpoint.attendees_entered_event == attendees
 
 
 def get_std_test_checkpoint():
@@ -108,3 +158,5 @@ def get_test_attendees():
     :return: list of Attendees
     """
     return [Attendee(.5, 0.3, .25, .5) for i in range(10)]
+
+test_metal_detector()
