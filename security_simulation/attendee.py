@@ -183,6 +183,7 @@ class Attendee(object):
          """
         #https://math.stackexchange.com/questions/1918743/how-to-interpolate-points-between-2-points
         c_loc = self.checkpoint_target.get_location()
+        self.dist_to_checkpoint = self._calc_distance(c_loc)
         new_y = N.floor(self.current_location[0] + (self.walk_speed / self.dist_to_checkpoint \
                                             * (c_loc[0] - self.current_location[0])))
         new_x = N.floor(self.current_location[1] + (self.walk_speed / self.dist_to_checkpoint \
