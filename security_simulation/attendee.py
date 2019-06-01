@@ -42,8 +42,10 @@ class Attendee(object):
         self.time_step_to_enqueue = 0  # find_checkpoint updates this value
         self.time_step_to_dequeue = 0
         self.total_wait = 0
+        self.checkpoint_vector = None
         self.status = 0  # 1= bag_check, 2 = metal detector
         self.checkpoint_target = None
+        self.walk_route = [current_location]
         self.attendee_id = attendee_id
    
     def vec_attendee(gender, metal_mean, metal_std_dev, coop_percent, attendee_id):
@@ -57,6 +59,10 @@ class Attendee(object):
         """
         return N.sqrt((self.current_location[1] - checkpoint_loc[1])**2 \
                     + (self.current_location[0] - checkpoint_loc[0])**2)
+    
+    def _set_checkpoint_vector(self, c_loc):
+        self.checkpoint_vector = (c_loc[0] - self.current_location[0], c_loc[1] - self.current_location[1])
+    
 
     def find_checkpoint(self, checkpoints):
         """Finds a checkpoint based on proximity and checkpoint queue size 
@@ -95,6 +101,7 @@ class Attendee(object):
         # found the target checkpoint, set that as the target_checkpoint
         self.checkpoint_target = checkpoints[min_index]
         self._calc_checkpoint_arrival(checkpoint_distances[min_index])
+        self._set_checkpoint_vector(self.checkpoint_target.get_location())
         return self.checkpoint_target
 
     def _calc_checkpoint_arrival(self, distance):
