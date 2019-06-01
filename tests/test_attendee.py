@@ -7,7 +7,7 @@ def test_to_dict():
     test to make sure attendee object is getting converted to dict properly
     :return: None
     """
-    a = Attendee(.5, 0.3, .25, .5)
+    a = Attendee(.5, 0.3, .25, .5, 1)
     a.calc_total_wait(550)
     d = a.to_dict()
     assert isinstance(d, dict)
@@ -17,9 +17,9 @@ def test_to_dict():
 
 
 def test_attendee_find_checkpoint():
-    att_1 = Attendee(.5, 0.3, .25, .5)
-    att_2 = Attendee(.5, 0.3, .25, .5, current_location=(0,5))
-    att_3 = Attendee(.5, 0.3, .25, .5, current_location=(5,7))
+    att_1 = Attendee(.5, 0.3, .25, .5, 1)
+    att_2 = Attendee(.5, 0.3, .25, .5, 2, current_location=(0,5))
+    att_3 = Attendee(.5, 0.3, .25, .5, 3, current_location=(5,7))
 
     check_1 = Checkpoint([])
     check_2 = Checkpoint([], location=(0,6))
@@ -35,16 +35,16 @@ def test_attendee_find_checkpoint():
     assert att_3.checkpoint_target is check_3
 
 def test_attendee_wait_time():
-    att_1 = Attendee(.5, 0.3, .25, .5)
-    att_2 = Attendee(.5, 0.3, .25, .5, time_entered=5)
-    att_3 = Attendee(.5, 0.3, .25, .5, time_entered=25)
+    att_1 = Attendee(.5, 0.3, .25, .5, 1)
+    att_2 = Attendee(.5, 0.3, .25, .5, 2, time_entered=5)
+    att_3 = Attendee(.5, 0.3, .25, .5, 3, time_entered=25)
 
     assert att_1.calc_total_wait(15) == 15
     assert att_2.calc_total_wait(35) == 30
     assert att_3.calc_total_wait(70) == 45
 
 def test_attendee_is_at_checkpoint():
-    att_1 = Attendee(.5, 0.3, .25, .5)
+    att_1 = Attendee(.5, 0.3, .25, .5, 1)
     check_1 = Checkpoint([], location=(6,8))
     att_1.find_checkpoint([check_1])
     print("Time it takes attendee to make it to checkpoint: "\
