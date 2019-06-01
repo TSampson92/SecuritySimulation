@@ -47,6 +47,9 @@ class Attendee(object):
         self.checkpoint_target = None
         self.walk_route = [current_location]
         self.attendee_id = attendee_id
+        self.walk_speed = rand.uniform(LOW_WALK_SPEED, HIGH_WALK_SPEED)
+        self.dist_to_checkpoint = 0.0
+        self.at_checkpoint = False
    
     def vec_attendee(gender, metal_mean, metal_std_dev, coop_percent, attendee_id):
         """Method to vectorize the attendee constructor"""
@@ -110,8 +113,8 @@ class Attendee(object):
             Generates a random speed in mps from average walking speeds"""
         # From: https://en.wikipedia.org/wiki/Walking, use random float between 4.51() kph (1.25 mps) to 5.43 kph (1.51 mps) to simulate
         # a walking speed
-        attendee_speed = rand.uniform(LOW_WALK_SPEED, HIGH_WALK_SPEED)
-        self.time_step_to_enqueue = N.ceil((distance / attendee_speed)) + self.time_entered
+        self.time_step_to_enqueue = N.ceil((distance / self.walk_speed)) + self.time_entered
+        self.dist_to_checkpoint = distance
         return self.time_step_to_enqueue
 
     def calc_total_wait(self, current_time_step):
@@ -142,6 +145,7 @@ class Attendee(object):
         Returns False if not
         """
         if current_time == self.time_step_to_enqueue:
+            self.at_checkpoint = True
             return True
         
         return False
@@ -150,12 +154,16 @@ class Attendee(object):
         """
         Performs a check on an attendee's arrival time at their chosen checkpoint
         If the attendee has arrived, they move into the queue of that checkpoint
+        The next step in the route to the checkpoint will also be calculated using inter_step
         :param time_step: The current time step the simulation is at. Compared against the arrival time
                           of the attendee at a checkpoint
         Returns:
             True if the attendee has arrived, the attendee is now in their target checkpoint
             False if they have not, nothing else happens
         """
+        if self.at_checkpoint:
+            return True
+
         if self._arrived_at_checkpoint(time_step):
             self.checkpoint_target.add_attendee(self, time_step)
             print("Attendee", self.attendee_id, "at:", self.current_location, \
@@ -163,8 +171,26 @@ class Attendee(object):
             self.current_location = self.checkpoint_target.get_location()
             return True
         
+        self.inter_step()
         return False
-
+    
+    def inter_step(self):
+        """
+        Interpolates the next point in the attendee's walk route
+        Uses the current location, walk speed, and the distance to the checkpoint to
+        determine the next point in the attendee's route
+        This function will update the attendee's current location to the new point
+         """
+        #https://math.stackexchange.com/questions/1918743/how-to-interpolate-points-between-2-points
+        c_loc = self.checkpoint_target.get_location()
+        new_y = N.floor(self.current_location[0] + (self.walk_speed / self.dist_to_checkpoint \
+                                            * (c_loc[0] - self.current_location[0])))
+        new_x = N.floor(self.current_location[1] + (self.walk_speed / self.dist_to_checkpoint \
+                                            * (c_loc[1] - self.current_location[1])))
+        new_location = (new_y, new_x)
+        self.current_location = new_location
+        self.walk_route.append(new_location)
+        
     def get_waiting_in_line(self):
         """
         Return the time the attendee spent waiting in line
