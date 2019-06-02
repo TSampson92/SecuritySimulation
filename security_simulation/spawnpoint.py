@@ -59,4 +59,35 @@ class SpawnPoint(object):
                 print("attendee_id =", current_id_num)                    
                 spawned_attendies.append(enter_ye)
         return spawned_attendies, num_to_spawn, current_id_num
-                
+    
+    def get_spawn_chance(self):
+        """
+        Getter method to return the chance of an attendee spawning  
+        :return:chance that an is attendee spawning                  
+        """
+        return self.spawn_chance
+        
+    def set_spawn_chance(self, chance):
+        """
+        Setter method to set the chance of an attendee spawning                       
+        """
+        self.spawn_chance = chance
+        
+    def get_spawn_many_chance(self):
+        """
+        Getter method to return the chance of multiple attendees spawning  
+        return:chance that multiple attendees are spawning                        
+        """
+        return self.spawn_more_than_one_chance
+        
+    def set_spawn_many_chance(self, chance):
+        """
+        Setter method to set the chance of an attendee spawning more than once                        
+        """
+        self.spawn_more_than_one_chance = chance
+        
+    def set_max_spawn(self,spawn_num):
+        """
+        Setter method to set the chance of an attendee spawning more than once                        
+        """ 
+        self.max_spawn = spawn_num

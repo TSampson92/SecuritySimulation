@@ -6,6 +6,9 @@ Other notes.
 import sys
 import numpy as np
 
+# from checkpoint import Checkpoint
+# from attendee import Attendee
+# from spawnpoint import SpawnPoint
 from security_simulation.checkpoint import Checkpoint
 from security_simulation.attendee import Attendee
 from security_simulation.spawnpoint import SpawnPoint
@@ -60,8 +63,8 @@ class Model:
                                         self.attendee_features,max_spawn=3, \
                                         location=spawnpoint_locations[i]))
        
-        #self.closed_door_time = closed_door_time
-        self.closed_door_time = 100
+        self.closed_door_time = closed_door_time
+        #self.closed_door_time = 100
         # Start the simulation.
         self._sim_loop()
 

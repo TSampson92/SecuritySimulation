@@ -6,7 +6,7 @@ Other notes.
 import numpy as np
 
 from security_simulation.Model import Model
-# from Model import Model
+#from Model import Model
 
 # For each checkpoint;
 # Number of bag checkers, metal detectors with operator, checkers for attendees who set off the detector:

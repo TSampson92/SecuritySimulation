@@ -155,13 +155,27 @@ class Checkpoint(object):
         self.bag_check.update(self.main_queue, self.num_to_bag_check, current_sim_time)
         self.metal_detector_update_cycle(current_sim_time)
 
+    def get_metal_security(self):  
+        """
+        get method to return access to security agent list that are in charge of metal_detectors
+        :return: list of security agents
+        """ 
+        return self.metal_detector_agents
+    
     def get_security(self):  
         """
-        get method to return access to security agent list to external classes
+        get method to return access to general security agent list 
         :return: list of security agents
         """ 
         return self.security_agent_list
-        
+         
+    def get_security_num(self):  
+        """
+        get method to return number of general security agents
+        :return: length of general security agents list
+        """ 
+        return len(self.security_agent_list) 
+           
     def get_line_length(self):  
         """
         get method to return length of main_queue which contains attendees
