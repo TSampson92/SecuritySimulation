@@ -168,6 +168,7 @@ class Attendee(object):
             self.checkpoint_target.add_attendee(self, time_step)
             print("Attendee", self.attendee_id, "at:", self.current_location, \
                 "has moved to checkpoint at:", self.checkpoint_target.get_location())
+            print("Attendee Walk Route: ", self.walk_route)
             self.current_location = self.checkpoint_target.get_location()
             return True
         
@@ -183,11 +184,16 @@ class Attendee(object):
          """
         #https://math.stackexchange.com/questions/1918743/how-to-interpolate-points-between-2-points
         c_loc = self.checkpoint_target.get_location()
+        
         self.dist_to_checkpoint = self._calc_distance(c_loc)
-        new_y = N.floor(self.current_location[0] + (self.walk_speed / self.dist_to_checkpoint \
-                                            * (c_loc[0] - self.current_location[0])))
-        new_x = N.floor(self.current_location[1] + (self.walk_speed / self.dist_to_checkpoint \
-                                            * (c_loc[1] - self.current_location[1])))
+        if N.floor(self.current_location[0]) == c_loc[0] \
+        and N.floor(self.current_location[1]) == c_loc[1]:
+            print("Attendee", self.attendee_id, "has reached it's target checkpoint.")
+            return
+        new_y = self.current_location[0] + (self.walk_speed / self.dist_to_checkpoint \
+                                            * (c_loc[0] - self.current_location[0]))
+        new_x = self.current_location[1] + (self.walk_speed / self.dist_to_checkpoint \
+                                            * (c_loc[1] - self.current_location[1]))
         new_location = (new_y, new_x)
         self.current_location = new_location
         self.walk_route.append(new_location)

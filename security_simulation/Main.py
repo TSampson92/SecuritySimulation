@@ -35,7 +35,7 @@ CHECKPOINT_LOCATIONS = np.array([
 CHECKPOINT_CONFIGURATIONS = np.array([0, 1])
 
 
-ATTENDEE_NUMBER = 1000
+ATTENDEE_NUMBER = 10
 
 GENDER_PERCENTAGE = 0.5
 
@@ -50,7 +50,7 @@ def __init__():
     #print("init start")
     model = Model(SECURITY_PERSONNEL_SETS, CHECKPOINT_LOCATIONS,
                   ATTENDEE_NUMBER, GENDER_PERCENTAGE, METAL_MEAN, METAL_STD_DEV, COOPERATIVE_CHANCE,
-                  closed_door_time=10000)
+                  closed_door_time=120)
 
 if __name__ == "__main__":
     __init__()
