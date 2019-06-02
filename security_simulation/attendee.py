@@ -187,8 +187,8 @@ class Attendee(object):
         c_loc = self.checkpoint_target.get_location()
         
         self.dist_to_checkpoint = self._calc_distance(c_loc)
-        if N.floor(self.current_location[0]) == c_loc[0] \
-        and N.floor(self.current_location[1]) == c_loc[1]:
+        if self.current_location[0] >= c_loc[0] \
+        and self.current_location[1] >= c_loc[1]:
             print("Attendee", self.attendee_id, "has reached it's target checkpoint.")
             return
         new_y = self.current_location[0] + (self.walk_speed / self.dist_to_checkpoint \
