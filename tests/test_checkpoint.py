@@ -120,6 +120,43 @@ def test_metal_detector():
     assert checkpoint.attendees_entered_event == attendees
 
 
+def test_checkpoint_with_bag_check():
+    attendees = get_test_attendees_with_bags()
+    checkpoint = get_std_test_checkpoint()
+    entered_event = checkpoint.attendees_entered_event
+    # add all attendees
+    for attendee in attendees:
+        checkpoint.add_attendee(attendee, 1)
+    # do a single update to start bag check
+    i = 1
+    checkpoint.update(i)
+    # ensure bag check is assigned first attendee and bag check flags are properly set
+    assert checkpoint.bag_check.security_personnel[0].assigned_attendee is attendees[0]
+    assert not checkpoint.bag_check.security_personnel[0].assigned_attendee.bag_check_complete
+    assert checkpoint.bag_check.security_personnel[0].assigned_attendee.getting_bag_checked
+    i += 1
+    # process first attendee
+    while len(checkpoint.main_queue) == 10:
+        checkpoint.update(i)
+        i += 1
+    # ensure metal detector agent is assigned first attendee and bag check flags are properly set
+    assert checkpoint.metal_detector_agents[0].assigned_attendee is attendees[0]
+    assert checkpoint.metal_detector_agents[0].assigned_attendee.bag_check_complete
+    assert not checkpoint.metal_detector_agents[0].assigned_attendee.getting_bag_checked
+
+    # process remaining attendees
+    while len(entered_event) < 10:
+        checkpoint.update(i)
+        i += 1
+
+    # check entered attendees have bags checked and waited an expected amount of time
+    previous_wait = 0
+    for attendee in entered_event:
+        assert attendee.bag_check_complete or not attendee.has_bag
+        assert attendee.total_wait > previous_wait
+        previous_wait = attendee.total_wait
+
+
 def get_std_test_checkpoint():
     bag_checkers = 1
     metal_detector_personnel = 1
@@ -158,3 +195,14 @@ def get_test_attendees():
     :return: list of Attendees
     """
     return [Attendee(.5, 0.3, .25, .5, i) for i in range(10)]
+
+
+def get_test_attendees_with_bags():
+    """
+    get 10 ten test attendees every other has a bag
+    :return: list of Attendees
+    """
+    attendees = [Attendee(.5, 0.3, .25, .5, i) for i in range(10)]
+    for i in range(0, len(attendees), 2):
+        attendees[i].has_bag = True
+    return attendees
