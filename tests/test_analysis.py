@@ -18,7 +18,7 @@ def test_file_output():
 
 
 def get_test_attendees():
-    attendees = [Attendee(.5, 0.3, .25, .5) for i in range(5)]
+    attendees = [Attendee(.5, 0.3, .25, .5, i) for i in range(5)]
     attendees[0].calc_total_wait(1000)
     attendees[1].calc_total_wait(1500)
     attendees[2].calc_total_wait(500)
