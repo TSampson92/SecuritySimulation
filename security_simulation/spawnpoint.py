@@ -54,5 +54,5 @@ class SpawnPoint(object):
                                     )
                 spawned_attendies.append(enter_ye)
                 current_id_num += 1
-        return spawned_attendies, num_to_spawn
+        return spawned_attendies, num_to_spawn, current_id_num
                 
