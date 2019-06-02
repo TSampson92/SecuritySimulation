@@ -10,6 +10,7 @@ setup(name='security_simulation',
       install_requires=[
           'numpy',
           'pytest',
-          'flake8'
+          'flake8',
+          'matplotlib'
       ],
       zip_safe=False)
