@@ -57,10 +57,6 @@ def test_check_bags():
         assert attendee.has_bag
 
 
-
-
-
-
 def get_test_bag_check(num_agents):
     agents = get_bag_check_personnel(num_agents)
     bag_check = BagCheck(agents)
