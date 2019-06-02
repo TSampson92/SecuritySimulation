@@ -9,7 +9,7 @@ HIGH_WALK_SPEED = 1.51
 
 
 class Attendee(object):
-    def __init__(self, gender, metal_mean, metal_std_dev, coop_chance, attendee_id, current_location=(0,0), time_entered=0, has_bag=False):
+    def __init__(self, gender, metal_mean, metal_std_dev, coop_chance, attendee_id, current_location=(0, 0), time_entered=0, has_bag=False):
         """
         Defines the behavior and state of an attendee
         :param gender: gender distribution, float in range [0,1]
@@ -51,6 +51,7 @@ class Attendee(object):
         self.walk_speed = rand.uniform(LOW_WALK_SPEED, HIGH_WALK_SPEED)
         self.dist_to_checkpoint = 0.0
         self.at_checkpoint = False
+        self.through_security = False
    
     def vec_attendee(gender, metal_mean, metal_std_dev, coop_percent, attendee_id):
         """Method to vectorize the attendee constructor"""
@@ -66,7 +67,6 @@ class Attendee(object):
     
     def _set_checkpoint_vector(self, c_loc):
         self.checkpoint_vector = (c_loc[0] - self.current_location[0], c_loc[1] - self.current_location[1])
-    
 
     def find_checkpoint(self, checkpoints):
         """Finds a checkpoint based on proximity and checkpoint queue size 
@@ -167,7 +167,7 @@ class Attendee(object):
 
         if self._arrived_at_checkpoint(time_step):
             self.checkpoint_target.add_attendee(self, time_step)
-            print("Attendee", self.attendee_id, "at:", self.current_location, \
+            print("Attendee", self.attendee_id, "at:", self.current_location,
                 "has moved to checkpoint at:", self.checkpoint_target.get_location())
             print("Attendee Walk Route: ", self.walk_route)
             self.current_location = self.checkpoint_target.get_location()
@@ -228,20 +228,7 @@ class Attendee(object):
         Convert object to json like dict representation
         :return: dict containing object data
         """
-        data = {
-            'gender': self.gender,
-            'metal_percent': self.metal_percent,
-            'isCooperative': self.isCooperative,
-            'current_location': self.current_location,
-            'bag_check_complete': self.bag_check_complete,
-            'has_bag': self.has_bag,
-            'time_step_to_enqueue': self.time_step_to_enqueue,
-            'time_step_to_dequeue': self.time_step_to_dequeue,
-            'total_wait': self.total_wait,
-            'status': self.status,
-            'check_point_target': self.checkpoint_target
-        }
-        return data
+        return self.__dict__
 
 
 _vectorized_attendee = N.vectorize(Attendee)

@@ -1,11 +1,10 @@
 import random
-from security_simulation.security_agent import SecurityAgent
-#from security_agent import SecurityAgent
+import uuid
 
 
 class BagCheck:
     def __init__(self, security_personnel: list,
-                 base_search_time=5, search_time_variance=25):
+                 base_search_time=5, search_time_variance=25, checkpoint_id=None):
         """
         Handles logic for checking attendees bags for an event
         :param security_personnel: list of security personnel at bag check
@@ -20,6 +19,8 @@ class BagCheck:
 
         self.bag_check_time = lambda: base_search_time + \
                                       random.randint(0, search_time_variance)
+        self.id = self.id = str(uuid.uuid4())
+        self.parent_checkpoint_id = checkpoint_id
 
     def update(self, queue, num_to_search, current_sim_time):
         """
@@ -63,3 +64,13 @@ class BagCheck:
                     attendee.bag_check_complete = True
                     agent.busy = False
                     agent.assigned_attendee = None
+
+    def to_dict(self):
+        """
+        Convert object to json like dict representation
+        :return: dict containing object data
+        """
+        base = self.__dict__
+        del base['bag_check_time']
+        base['security_personnel'] = [agent.to_dict() for agent in base['security_personnel']]
+        return base

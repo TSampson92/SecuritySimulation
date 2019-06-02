@@ -1,3 +1,5 @@
+import uuid
+
 class SecurityAgent:
     ROLES = frozenset(['PATDOWN', 'WAND', 'BAG_CHECK', 'METAL_DETECTOR', 'STANDARD', 'STANDING'])
     GENDERS = frozenset(['F', 'M', None])
@@ -12,6 +14,7 @@ class SecurityAgent:
         self.gender = gender  # "F" = female, "M" = male
         self.role = role
         self.assigned_attendee = None
+        self.id = str(uuid.uuid4())
 
     # doing this is essentially a built in getter and setter
     # it uses the getter and setter when using Instance.value syntax
@@ -60,6 +63,16 @@ class SecurityAgent:
         :return: returns the attendee assigned to a security person
         """
         return self.assigned_attendee
+
+    def to_dict(self):
+        """
+        Convert object to json like dict representation
+        :return: dict containing object data
+        """
+        base = self.__dict__
+        if base['assigned_attendee'] is not None:
+            base['assigned_attendee'] = base['assigned_attendee'].to_dict()
+        return base
 
 
 class InvalidSecurityGenderException(Exception):

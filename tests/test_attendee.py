@@ -34,6 +34,7 @@ def test_attendee_find_checkpoint():
     assert att_2.checkpoint_target is check_2
     assert att_3.checkpoint_target is check_3
 
+
 def test_attendee_wait_time():
     att_1 = Attendee(.5, 0.3, .25, .5, 1)
     att_2 = Attendee(.5, 0.3, .25, .5, 2, time_entered=5)
@@ -42,6 +43,7 @@ def test_attendee_wait_time():
     assert att_1.calc_total_wait(15) == 15
     assert att_2.calc_total_wait(35) == 30
     assert att_3.calc_total_wait(70) == 45
+
 
 def test_attendee_is_at_checkpoint():
     att_1 = Attendee(.5, 0.3, .25, .5, 1)

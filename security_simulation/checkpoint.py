@@ -1,4 +1,5 @@
 import random
+import uuid
 import numpy as np
 from security_simulation.security_agent import SecurityAgent
 from security_simulation.bag_check import BagCheck
@@ -37,6 +38,7 @@ class Checkpoint(object):
         :param metal_action: action taken when attendee sets off detector PATDOWN or WAND
         :param num_to_bag_check: number of attendees back from the front of the line who may bet their bags checked
         """
+        self.id = str(uuid.uuid4())
         self.security_agent_list = []
         self.metal_detector_agents = []  # keep an extra ref to metal detector agents for efficiency
         self.security_roles = security_roles
@@ -87,8 +89,8 @@ class Checkpoint(object):
                 elif index == 2:
                     agent = SecurityAgent(role='STANDING', gender=gender)
                 self.security_agent_list.append(agent)
-                #print("at index:", index, "=", num_agents_of_type, agent.role)
-        self.bag_check = BagCheck(self.security_agent_list)
+                # print("at index:", index, "=", num_agents_of_type, agent.role)
+        self.bag_check = BagCheck(self.security_agent_list, checkpoint_id=self.id)
                   
     def add_attendee(self, attendee, current_sim_time):
         """
@@ -124,6 +126,7 @@ class Checkpoint(object):
                     # use busy until instead of current time because it will be an exact entrance time
                     attendee.total_wait = attendee.calc_total_wait(agent.busy_until)
                     attendee.end_queue_time(agent.busy_until)
+                    attendee.through_security = True
                     self.attendees_entered_event.append(agent.assigned_attendee)
                     # free agent up
                     agent.busy = False
@@ -205,6 +208,21 @@ class Checkpoint(object):
             elif metal_action == 'PATDOWN':
                 time += self.__patdown_time()
         return time
+
+    def to_dict(self):
+        base = self.__dict__
+        del base['not_cooperative_time']
+        del base['attendees_entered_event']
+
+        base['main_queue'] = [attendee.to_dict() for attendee in base['main_queue']]
+
+        base['security_agent_list'] = [agent.to_dict() for agent in base['security_agent_list']]
+
+        base['metal_detector_agents'] = [agent.to_dict() for agent in base['metal_detector_agents']]
+
+        base['bag_check'] = base['bag_check'].to_dict()
+
+        return base
 
     @staticmethod
     def __detector_time():

@@ -104,6 +104,7 @@ def test_metal_detector():
     # make sure first attendee entered the event
     assert len(checkpoint.attendees_entered_event) == 1
     assert checkpoint.attendees_entered_event[0] is first_attendee
+    assert checkpoint.attendees_entered_event[0].through_security
 
     # call update until queue is empty
     while len(checkpoint.main_queue) > 0:
@@ -118,6 +119,8 @@ def test_metal_detector():
     # make sure all entered event and in right order
     assert len(checkpoint.attendees_entered_event) == 10
     assert checkpoint.attendees_entered_event == attendees
+    for attendee in checkpoint.attendees_entered_event:
+        assert attendee.through_security
 
 
 def test_checkpoint_with_bag_check():
@@ -154,6 +157,7 @@ def test_checkpoint_with_bag_check():
     for attendee in entered_event:
         assert attendee.bag_check_complete or not attendee.has_bag
         assert attendee.total_wait > previous_wait
+        assert attendee.through_security
         previous_wait = attendee.total_wait
 
 
