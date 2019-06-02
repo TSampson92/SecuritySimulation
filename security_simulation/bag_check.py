@@ -40,7 +40,7 @@ class BagCheck:
                         # setup agent as busy checking bag
                         agent.set_attendee(attendee)
                         agent.busy = True
-                        agent.busy_until = current_sim_time + self.bag_check_time
+                        agent.busy_until = current_sim_time + self.bag_check_time()
                         # setup agent as busy getting bag checked
                         attendee.getting_bag_checked = True
                         break  # break since found attendee to search
