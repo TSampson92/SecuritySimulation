@@ -1,6 +1,7 @@
 import numpy as N
 import numpy.random as rand
 
+#from checkpoint import Checkpoint
 from security_simulation.checkpoint import Checkpoint
 
 LOW_WALK_SPEED = 1.25

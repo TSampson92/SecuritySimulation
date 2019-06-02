@@ -1,12 +1,12 @@
 import numpy as N
 import numpy.random as rand
 
+#from attendee import Attendee
 from security_simulation.attendee import Attendee
 
 
-
 class SpawnPoint(object):
-
+    
     def __init__(self, spawn_chance, spawn_more_than_one_chance, attendee_init_params, max_spawn=3, location=(0,0)):
         """
         Defines an attendee entrance (spawn) point into the simulation
@@ -35,14 +35,18 @@ class SpawnPoint(object):
         If an attendee is spawned, there is another chance that more than one will be spawned.
         :param current_time_step: The current timestep of the simulation. This will be the simulation 
                                   time for all attendees spawned in this call of the method
+        :param current_id_num:passed in most current attendee id being used                          
         """
+        num_to_spawn = 0
         spawned_attendies = []
         if rand.random() < self.spawn_chance:
             if (rand.random() < self.spawn_more_than_one_chance):
                 num_to_spawn = rand.randint(2, self.max_spawn)
             else:
                 num_to_spawn = 1
+            print("num spawned =",num_to_spawn)
             for i in range(num_to_spawn):
+                current_id_num = current_id_num + 1
                 enter_ye = Attendee(self.attendee_gender_per,\
                                     self.attendee_metal_mean,\
                                     self.attendee_metal_std_dev,\
@@ -52,7 +56,7 @@ class SpawnPoint(object):
                                     time_entered=current_time_step,\
                                     has_bag=rand.randint(0,1),
                                     )
+                print("attendee_id =", current_id_num)                    
                 spawned_attendies.append(enter_ye)
-                current_id_num += 1
         return spawned_attendies, num_to_spawn, current_id_num
                 
