@@ -157,6 +157,4 @@ def get_test_attendees():
     test attendees for checkpoint testing
     :return: list of Attendees
     """
-    return [Attendee(.5, 0.3, .25, .5) for i in range(10)]
-
-test_metal_detector()
+    return [Attendee(.5, 0.3, .25, .5, i) for i in range(10)]

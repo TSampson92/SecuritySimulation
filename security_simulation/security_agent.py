@@ -1,6 +1,6 @@
-
 class SecurityAgent:
     ROLES = frozenset(['PATDOWN', 'WAND', 'BAG_CHECK', 'METAL_DETECTOR', 'STANDARD', 'STANDING'])
+    GENDERS = frozenset(['F', 'M', None])
 
     def __init__(self, role='PATDOWN', gender=None):
         """
@@ -9,7 +9,7 @@ class SecurityAgent:
         """
         self.busy = False
         self.busy_until = 0  # time value that agent is free
-        self.gender = gender # "F" = female, "M" = male
+        self.gender = gender  # "F" = female, "M" = male
         self.role = role
         self.assigned_attendee = None
 
@@ -25,7 +25,18 @@ class SecurityAgent:
         if role in SecurityAgent.ROLES:
             self.__role = role
         else:
-            raise Exception('Invalid Role')
+            raise InvalidSecurityRoleException('Invalid Role')
+
+    @property
+    def gender(self):
+        return self.__gender
+
+    @gender.setter
+    def gender(self, gender):
+        if gender in SecurityAgent.GENDERS:
+            self.__gender = gender
+        else:
+            raise InvalidSecurityGenderException('Invalid Gender')
 
     def test_role(self, role, gender):  # to test that role was set by checkpoint
         """
@@ -49,3 +60,13 @@ class SecurityAgent:
         :return: returns the attendee assigned to a security person
         """
         return self.assigned_attendee
+
+
+class InvalidSecurityGenderException(Exception):
+    """rasied when gender is set to an invalid value"""
+    pass
+
+
+class InvalidSecurityRoleException(Exception):
+    """raised when role is set to an invalid value"""
+    pass
