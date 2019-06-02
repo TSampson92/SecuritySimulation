@@ -43,7 +43,7 @@ SPAWNPOINT_LOCATIONS = np.array([
     (25,5)
 ])
 
-ATTENDEE_NUMBER = 1000
+ATTENDEE_NUMBER = 10
 
 GENDER_PERCENTAGE = 0.5
 
@@ -62,7 +62,7 @@ def __init__():
     model = Model(SECURITY_PERSONNEL_SETS, CHECKPOINT_LOCATIONS, 
                   SPAWNPOINT_LOCATIONS, SPAWN_CHANCE, SPAWN_MORE_THAN_ONE_CHANCE,
                   ATTENDEE_NUMBER, GENDER_PERCENTAGE, METAL_MEAN, METAL_STD_DEV, COOPERATIVE_CHANCE,
-                  closed_door_time=10000)
+                  closed_door_time=120)
 
 if __name__ == "__main__":
     __init__()
