@@ -29,7 +29,7 @@ class SpawnPoint(object):
         self.location = location
 
     
-    def spawn_attendee(self, current_time_step):
+    def spawn_attendee(self, current_time_step, current_id_num):
         """
         Called at each timestep at a Spawnpoint to spawn between 0 and self.max_spawn attendees. 
         If an attendee is spawned, there is another chance that more than one will be spawned.
@@ -47,9 +47,12 @@ class SpawnPoint(object):
                                     self.attendee_metal_mean,\
                                     self.attendee_metal_std_dev,\
                                     self.attendee_coop_chance,\
+                                    attendee_id=current_id_num, \
                                     current_location=self.location,\
                                     time_entered=current_time_step,\
-                                    has_bag=rand.randint(0,1))
+                                    has_bag=rand.randint(0,1),
+                                    )
                 spawned_attendies.append(enter_ye)
-        return spawned_attendies, num_to_spawn
+                current_id_num += 1
+        return spawned_attendies, num_to_spawn, current_id_num
                 
