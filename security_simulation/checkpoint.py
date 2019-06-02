@@ -89,7 +89,7 @@ class Checkpoint(object):
                 self.security_agent_list.append(agent)
                 #print("at index:", index, "=", num_agents_of_type, agent.role)
         self.bag_check = BagCheck(self.security_agent_list)
-                                     
+                  
     def add_attendee(self, attendee, current_sim_time):
         """
         adds an attendee to a specific checkpoint queue
@@ -157,18 +157,11 @@ class Checkpoint(object):
 
     def get_security(self):  
         """
-        get method to return access to general security agent list
+        get method to return access to security agent list to external classes
         :return: list of security agents
         """ 
         return self.security_agent_list
         
-    def get_metal_security(self):
-        """
-        get method to return access to security agent list who role is metal detector
-        :return: list of security agents
-        """ 
-        return self.metal_detector_agents
-                    
     def get_line_length(self):  
         """
         get method to return length of main_queue which contains attendees
