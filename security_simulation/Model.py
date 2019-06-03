@@ -66,13 +66,12 @@ class Model:
         for i in range(len(spawnpoint_locations)):
             self.spawnpoint_list.append(SpawnPoint(spawn_chance, spawn_more_than_one_chance,
                                                    self.attendee_features, max_spawn=3,
-                                                   location=spawnpoint_locations[i]))
-
+                                                   location=spawnpoint_locations[i], total_attendees=attendee_number))
+        self.max_attendees = attendee_number
         self.closed_door_time = closed_door_time
         # self.closed_door_time = 100
         # Start the simulation.
         self.last_sim_filename = self._sim_loop()
-        self.max_attendees = attendee_number
 
     def _sim_loop(self):
         """
@@ -90,10 +89,10 @@ class Model:
             print("******** Current time:", self.current_time, "********")
             # spawn new attendees
             newly_added_attendees = 0
-            if (attendee_id < self.max_attendees):
+            if attendee_id < self.max_attendees:
                 for i in range(len(self.spawnpoint_list)):
                     location = self.spawnpoint_list[i]
-                    list, num_spawned, attendee_id = location.spawn_attendee(self.current_time, attendee_id)
+                    list, num_spawned, attendee_id = location.spawn_attendee(self.current_time, attendee_id, len(self.attendee_set))
                     newly_added_attendees = newly_added_attendees + num_spawned
                     self.attendee_set = self.attendee_set + list
 
