@@ -6,7 +6,7 @@ Other notes.
 import numpy as np
 
 from security_simulation.Model import Model
-#from Model import Model
+
 
 # For each checkpoint;
 # Number of bag checkers, metal detectors with operator, checkers for attendees who set off the detector:
@@ -28,7 +28,6 @@ CHECKPOINT_LOCATIONS = np.array([
     (10, 10),
     (20, 10)
 ])
-
 
 
 # The id associated with the checkpoint setup:
@@ -57,12 +56,16 @@ SPAWN_CHANCE = 0.50
 
 SPAWN_MORE_THAN_ONE_CHANCE = 0.10
 
+SAVE_SIMULATION = True
+
+
 def __init__():
     #print("init start")
-    model = Model(SECURITY_PERSONNEL_SETS, CHECKPOINT_LOCATIONS, 
+    model = Model(SECURITY_PERSONNEL_SETS, CHECKPOINT_LOCATIONS,
                   SPAWNPOINT_LOCATIONS, SPAWN_CHANCE, SPAWN_MORE_THAN_ONE_CHANCE,
                   ATTENDEE_NUMBER, GENDER_PERCENTAGE, METAL_MEAN, METAL_STD_DEV, COOPERATIVE_CHANCE,
-                  closed_door_time=1000)
+                  closed_door_time=25, save_simulation=SAVE_SIMULATION)
+
 
 if __name__ == "__main__":
     __init__()

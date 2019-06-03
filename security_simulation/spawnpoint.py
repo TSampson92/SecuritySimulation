@@ -28,7 +28,6 @@ class SpawnPoint(object):
         self.max_spawn = max_spawn
         self.location = location
 
-    
     def spawn_attendee(self, current_time_step, current_id_num):
         """
         Called at each timestep at a Spawnpoint to spawn between 0 and self.max_spawn attendees. 

@@ -4,14 +4,14 @@ Other notes.
 """
 
 import sys
+
 import numpy as np
 
+from security_simulation.analysis import Analysis
 # from checkpoint import Checkpoint
 # from attendee import Attendee
 # from spawnpoint import SpawnPoint
 from security_simulation.checkpoint import Checkpoint
-from security_simulation.attendee import Attendee
-from security_simulation.analysis import Analysis
 from security_simulation.spawnpoint import SpawnPoint
 
 
@@ -30,7 +30,7 @@ class Model:
     def __init__(self, security_personnel_sets, checkpoint_locations,
                  spawnpoint_locations, spawn_chance, spawn_more_than_one_chance,
                  attendee_number, gender_percentage, metal_mean, metal_std_dev, cooperative_chance,
-                 closed_door_time=sys.maxsize):
+                 closed_door_time=sys.maxsize, save_simulation=False):
         """Sets up the attendees, checkpoints, and the longest amount of time steps to run for based on the parameters.
 
         :param checkpoint_positions:
@@ -47,6 +47,7 @@ class Model:
         :param closed_door_time:
         """
         self.sim_data_analysis = Analysis()
+        self.save_sim = save_simulation
         self.attendee_set = []
         self.spawnpoint_list = []
         self.attendees_entered_event_set = []
@@ -70,7 +71,7 @@ class Model:
         self.closed_door_time = closed_door_time
         # self.closed_door_time = 100
         # Start the simulation.
-        self._sim_loop()
+        self.last_sim_filename = self._sim_loop()
 
     def _sim_loop(self):
         """
@@ -111,12 +112,11 @@ class Model:
                 self.attendee_set[attendee_index].update(self.current_time)
 
             # dump state for current time step
-            # TODO fix this
-            self.sim_data_analysis.add_time_step(self.current_time, self.attendee_set,
-                                                 self.event_checkpoints, self.attendees_entered_event_set)
+            if self.save_sim:
+                self.sim_data_analysis.add_time_step(self.current_time, self.attendee_set,
+                                                     self.event_checkpoints, self.attendees_entered_event_set)
             self.current_time += 1
 
-
-
         # save simulation to file
-        self.sim_data_analysis.dump_simulation_to_file()
+        if self.save_sim:
+            return self.sim_data_analysis.dump_simulation_to_file()
