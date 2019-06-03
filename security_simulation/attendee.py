@@ -114,7 +114,7 @@ class Attendee(object):
             Generates a random speed in mps from average walking speeds"""
         # From: https://en.wikipedia.org/wiki/Walking, use random float between 4.51() kph (1.25 mps) to 5.43 kph (1.51 mps) to simulate
         # a walking speed
-        self.time_step_to_enqueue = N.ceil((distance / self.walk_speed)) + self.time_entered
+        self.time_step_to_enqueue = int(N.ceil((distance / self.walk_speed)) + self.time_entered)
         self.dist_to_checkpoint = distance
         return self.time_step_to_enqueue
 
@@ -195,7 +195,7 @@ class Attendee(object):
                                             * (c_loc[0] - self.current_location[0]))
         new_x = self.current_location[1] + (self.walk_speed / self.dist_to_checkpoint \
                                             * (c_loc[1] - self.current_location[1]))
-        new_location = (new_y, new_x)
+        new_location = [float(new_y), float(new_x)]
         self.current_location = new_location
         self.walk_route.append(new_location)
         
@@ -228,7 +228,18 @@ class Attendee(object):
         Convert object to json like dict representation
         :return: dict containing object data
         """
-        return self.__dict__
+        base = self.__dict__
+        return_dict = {}
+        # don't include keys of object references so their value is not overwritten
+        bad_keys = ['walk_route', 'current_location', 'checkpoint_target', 'checkpoint_vector']
+        for k, v in base.items():
+            if k not in bad_keys:
+                return_dict[k] = v
+        return_dict['walk_route'] = self.walk_route
+        return_dict['current_location'] = [float(i) for i in self.current_location] if self.current_location is not None else None
+        return_dict['checkpoint_target'] = self.checkpoint_target.id if self.checkpoint_target else None
+        return_dict['checkpoint_vector'] = (int(self.checkpoint_vector[0]), int(self.checkpoint_vector[1])) if self.checkpoint_vector else None
+        return return_dict
 
 
 _vectorized_attendee = N.vectorize(Attendee)

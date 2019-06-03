@@ -1,6 +1,7 @@
 from security_simulation.attendee import Attendee
 from security_simulation.analysis import Analysis
 from security_simulation.checkpoint import Checkpoint
+import numpy as N
 
 
 def test_file_output():
@@ -25,7 +26,7 @@ def get_test_checkpoint():
     bag_checkers = 1
     metal_detector_personnel = 1
     person_after_detector = 1
-    roles_list = [bag_checkers, metal_detector_personnel, person_after_detector]
+    roles_list = N.array([bag_checkers, metal_detector_personnel, person_after_detector])
     entered_event = []
     checkpoint = Checkpoint(roles_list)
     return checkpoint

@@ -70,9 +70,18 @@ class SecurityAgent:
         :return: dict containing object data
         """
         base = self.__dict__
+        return_dict = {}
+        # don't include keys of object references so their value is not overwritten
+        bad_keys = ['assigned_attendee']
+        for k, v in base.items():
+            if k not in bad_keys:
+                return_dict[k] = v
+
         if base['assigned_attendee'] is not None:
-            base['assigned_attendee'] = base['assigned_attendee'].to_dict()
-        return base
+            return_dict['assigned_attendee'] = base['assigned_attendee'].to_dict()
+        else:
+            return_dict['assigned_attendee'] = None
+        return return_dict
 
 
 class InvalidSecurityGenderException(Exception):

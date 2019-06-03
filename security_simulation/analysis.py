@@ -53,10 +53,12 @@ class Analysis:
         :param state_dict:
         :return: filename
         """
-        data = json.dumps(state_dict)
+        data = state_dict
         filename = 'SecuritySimulationData_' + str(time.time()) + '.json'
-        with open(filename, 'w') as file:
-            file.write(data)
+
+        with open(filename, 'w') as f:
+            for chunk in json.JSONEncoder().iterencode(data):
+                f.write(chunk)
         return filename
 
     def load_simulation_file(self, filename):

@@ -212,18 +212,31 @@ class Checkpoint(object):
 
     def to_dict(self):
         base = self.__dict__
-        del base['not_cooperative_time']
-        del base['attendees_entered_event']
+        return_dict = {}
+        # don't include keys of object references so their value is not overwritten
+        bad_keys = ['not_cooperative_time', 'attendees_entered_event',
+                    'main_queue', 'security_agent_list',
+                    'bag_check', 'metal_detector_agents', 'security_roles',
+                    'location', 'num_metal_detectors']
+        for k, v in base.items():
+            if k not in bad_keys:
+                return_dict[k] = v
 
-        base['main_queue'] = [attendee.to_dict() for attendee in base['main_queue']]
+        return_dict['main_queue'] = [attendee.attendee_id for attendee in base['main_queue']]
 
-        base['security_agent_list'] = [agent.to_dict() for agent in base['security_agent_list']]
+        return_dict['security_agent_list'] = [agent.to_dict() for agent in base['security_agent_list']]
 
-        base['metal_detector_agents'] = [agent.to_dict() for agent in base['metal_detector_agents']]
+        return_dict['metal_detector_agents'] = [agent.id for agent in base['metal_detector_agents']]
 
-        base['bag_check'] = base['bag_check'].to_dict()
+        return_dict['bag_check'] = base['bag_check'].to_dict()
 
-        return base
+        return_dict['security_roles'] = self.security_roles.tolist() if self.security_roles is not None else None
+
+        return_dict['location'] = [float(self.location[0]), float(self.location[1])]
+
+        return_dict['num_metal_detectors'] = int(self.num_metal_detectors)
+
+        return return_dict
 
     @staticmethod
     def __detector_time():

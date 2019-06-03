@@ -71,6 +71,12 @@ class BagCheck:
         :return: dict containing object data
         """
         base = self.__dict__
-        del base['bag_check_time']
-        base['security_personnel'] = [agent.to_dict() for agent in base['security_personnel']]
-        return base
+        return_dict = {}
+        # don't include keys of object references so their value is not overwritten
+        bad_keys = ['bag_check_time']
+        for k, v in base.items():
+            if k not in bad_keys:
+                return_dict[k] = v
+
+        return_dict['security_personnel'] = [agent.id for agent in base['security_personnel']]
+        return return_dict

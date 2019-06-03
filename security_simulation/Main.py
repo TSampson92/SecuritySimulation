@@ -37,11 +37,11 @@ CHECKPOINT_CONFIGURATIONS = np.array([0, 1])
 
 # For each spawnpoint location;
 # The x coordinate in the space, y coordinate in the space:
-SPAWNPOINT_LOCATIONS = np.array([
+SPAWNPOINT_LOCATIONS = [
     (5, 5),
     (15, 5),
-    (25,5)
-])
+    (25, 5)
+]
 
 ATTENDEE_NUMBER = 10
 
@@ -62,7 +62,7 @@ def __init__():
     model = Model(SECURITY_PERSONNEL_SETS, CHECKPOINT_LOCATIONS, 
                   SPAWNPOINT_LOCATIONS, SPAWN_CHANCE, SPAWN_MORE_THAN_ONE_CHANCE,
                   ATTENDEE_NUMBER, GENDER_PERCENTAGE, METAL_MEAN, METAL_STD_DEV, COOPERATIVE_CHANCE,
-                  closed_door_time=120)
+                  closed_door_time=1000)
 
 if __name__ == "__main__":
     __init__()
