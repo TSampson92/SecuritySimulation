@@ -25,19 +25,8 @@ input_file = open(INPUT_FILE_PATH, 'r')
 input_object = json.loads(input_file.read())
 
 SECURITY_PERSONNEL_SETS = np.array(input_object["SECURITY_PERSONNEL_SETS"])
-#np.array([
-#    [2, 1, 1],
-#    [3, 1, 1],
-#    [3,1,1]
-#])
-print(SECURITY_PERSONNEL_SETS)
 
 BAG_CHECKERS = np.array(input_object["BAG_CHECKERS"])
-#np.array([
-#    True,
-#    False
-#])
-print(BAG_CHECKERS)
 
 #coordinates for checkpoints in tacoma dome using map
 CHECKPOINT_A = (175,108)
@@ -49,15 +38,8 @@ CHECKPOINT_F = (80,180)
 
 # For each checkpoint;
 # The x coordinate in the space, y coordinate in the space:
-# CHECKPOINT_LOCATIONS = np.array([
-#     CHECKPOINT_A,
-#     CHECKPOINT_F
-# ])
-CHECKPOINT_LOCATIONS = np.array([
-    CHECKPOINT_A,
-    CHECKPOINT_B,
-    CHECKPOINT_D
-])
+
+CHECKPOINT_LOCATIONS = np.array(input_object["CHECKPOINT_LOCATIONS"])
 
 # The id associated with the checkpoint setup:
 
@@ -74,23 +56,10 @@ PARKING_A = (68,34)
 
 # For each spawnpoint location;
 # The x coordinate in the space, y coordinate in the space:
-# SPAWNPOINT_LOCATIONS = [
-#     PARKING_H,
-#     PARKING_K,
-# ]
-SPAWNPOINT_LOCATIONS = [
-    PARKING_D,
-    PARKING_E,
-    PARKING_A,
-    PARKING_C
-]
 
+SPAWNPOINT_LOCATIONS = input_object["SPAWNPOINT_LOCATIONS"]
 
 SPAWNPOINT_PERCENTAGES = input_object["SPAWNPOINT_PERCENTAGES"]
-#[
-#    (.70, .20),
-#    (.20, .10),
-#]
 
 ATTENDEE_NUMBER = input_object["ATTENDEE_NUMBER"]
 
