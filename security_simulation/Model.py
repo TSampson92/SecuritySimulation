@@ -72,6 +72,7 @@ class Model:
         # self.closed_door_time = 100
         # Start the simulation.
         self.last_sim_filename = self._sim_loop()
+        self.max_attendees = attendee_number
 
     def _sim_loop(self):
         """
@@ -89,11 +90,12 @@ class Model:
             print("******** Current time:", self.current_time, "********")
             # spawn new attendees
             newly_added_attendees = 0
-            for i in range(len(self.spawnpoint_list)):
-                location = self.spawnpoint_list[i]
-                list, num_spawned, attendee_id = location.spawn_attendee(self.current_time, attendee_id)
-                newly_added_attendees = newly_added_attendees + num_spawned
-                self.attendee_set = self.attendee_set + list
+            if (attendee_id < self.max_attendees):
+                for i in range(len(self.spawnpoint_list)):
+                    location = self.spawnpoint_list[i]
+                    list, num_spawned, attendee_id = location.spawn_attendee(self.current_time, attendee_id)
+                    newly_added_attendees = newly_added_attendees + num_spawned
+                    self.attendee_set = self.attendee_set + list
 
             # Find the nearest checkpoint for the newly spawned attendee's
             index = len(self.attendee_set) - newly_added_attendees
