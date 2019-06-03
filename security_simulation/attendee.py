@@ -1,3 +1,5 @@
+import copy
+
 import numpy as N
 import numpy.random as rand
 
@@ -246,5 +248,14 @@ class Attendee(object):
         return_dict['checkpoint_vector'] = (int(self.checkpoint_vector[0]), int(self.checkpoint_vector[1])) if self.checkpoint_vector else None
         return return_dict
 
+    def to_min_dict(self):
+        base = copy.deepcopy(self.to_dict())
+        return_dict = {'current_location': base['current_location'],
+                       'checkpoint_target': base['checkpoint_target'],
+                        'through_security': base['through_security'],
+                        'at_checkpoint': base['at_checkpoint']
+                       }
+
+        return return_dict
 
 _vectorized_attendee = N.vectorize(Attendee)

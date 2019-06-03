@@ -31,7 +31,7 @@ class Model:
     def __init__(self, security_personnel_sets, checkpoint_locations,
                  spawnpoint_locations, spawnpoint_percentages,
                  attendee_number, gender_percentage, metal_mean, metal_std_dev, cooperative_chance,
-                 closed_door_time=sys.maxsize, save_simulation=False):
+                 closed_door_time=sys.maxsize, save_simulation=False, minimal_save=True, save_only_final_state=False):
         """Sets up the attendees, checkpoints, and the longest amount of time steps to run for based on the parameters.
 
         :param checkpoint_positions:
@@ -57,10 +57,13 @@ class Model:
             'metal_mean': metal_mean,
             'metal_std_dev': metal_std_dev,
             'cooperative_chance': cooperative_chance,
-            'closed_door_time': closed_door_time
+            'closed_door_time': closed_door_time,
+            'spawnpoint_percentages': spawnpoint_percentages
         }
         self.sim_data_analysis = Analysis()
         self.save_sim = save_simulation
+        self.save_minimal = minimal_save
+        self.save_final_state_only = save_only_final_state
         self.attendee_set = []
         self.spawnpoint_list = []
         self.spawnpoint_percentages = spawnpoint_percentages
@@ -132,12 +135,15 @@ class Model:
                 self.attendee_set[attendee_index].update(self.current_time)
 
             # dump state for current time step
-            if self.save_sim:
+            if self.save_sim and not self.save_final_state_only:
                 self.sim_data_analysis.add_time_step(self.current_time, self.attendee_set,
                                                      self.event_checkpoints, self.attendees_entered_event_set,
-                                                     include_attendees=True, include_checkpoints=True, include_entered=False)
+                                                     include_attendees=True, include_checkpoints=True, include_entered=False, minimal=self.save_minimal)
             self.current_time += 1
 
         # save simulation to file
         if self.save_sim:
+            if self.save_final_state_only:
+                self.sim_data_analysis.add_time_step(self.current_time, self.attendee_set, self.event_checkpoints, self.attendees_entered_event_set,
+                                                     include_attendees=True, include_checkpoints=True, minimal=False)
             return self.sim_data_analysis.dump_simulation_to_file()

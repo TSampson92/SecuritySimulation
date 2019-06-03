@@ -1,3 +1,4 @@
+import copy
 import random
 import uuid
 import numpy as np
@@ -235,6 +236,16 @@ class Checkpoint(object):
         return_dict['location'] = [float(self.location[0]), float(self.location[1])]
 
         return_dict['num_metal_detectors'] = int(self.num_metal_detectors)
+
+        return return_dict
+
+    def to_min_dict(self):
+        base = copy.deepcopy(self.to_dict())
+        return_dict = {'location': base['location'],
+                       'queue_length': len(self.main_queue),
+                       'num_entered_event': len(self.attendees_entered_event),
+                       'id': base['id']
+                       }
 
         return return_dict
 
