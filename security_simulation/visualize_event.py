@@ -1,5 +1,6 @@
 import numpy as N
 import matplotlib.pyplot as plt
+from security_simulation.analysis import Analysis 
 
 
 class Visualize(object):
@@ -12,9 +13,18 @@ class Visualize(object):
 
     
     def plot_sim(self):
+        #Load the simulation output file
+        ana = Analysis()
+        sim_dict = ana.load_simulation_file(self.sim_file)
+        #Load the image that the visualization will run over
         im = plt.imread(self.event_image)
         implot = plt.imshow(im, aspect='equal')
-        plt.scatter([900],[900])
+
+        plt.interactive(True)
+        #Each key in the sim_dict is a time_step, iterate through and
+        #plot the simulation state
+        for time_step in sim_dict.keys():
+            
         plt.show()
     
 
