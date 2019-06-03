@@ -7,10 +7,11 @@ import sys
 
 import numpy as np
 
-from security_simulation.analysis import Analysis
+
 # from checkpoint import Checkpoint
 # from analysis import Analysis
 # from spawnpoint import SpawnPoint
+from security_simulation.analysis import Analysis
 from security_simulation.checkpoint import Checkpoint
 from security_simulation.spawnpoint import SpawnPoint
 
@@ -89,7 +90,9 @@ class Model:
 
     def _sim_loop(self):
         """
-
+        Core function of program. Attendees will be spawned, checkpoints are updated,
+        attendees find their closest checkpoint, and attendees's movements are updated
+        through each time step
         :return:
         """
         attendee_id = 0

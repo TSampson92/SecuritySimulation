@@ -45,7 +45,6 @@ class SpawnPoint(object):
         """
         num_to_spawn = 0
         spawned_attendies = []
-        #within 50% of the total time, 75% of attendees will have arrived
         if(current_time<self.max_time/2):
            self.first_half() 
         elif(current_time>self.max_time/2):
