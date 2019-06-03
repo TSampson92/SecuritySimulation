@@ -9,7 +9,7 @@ import numpy as np
 
 from security_simulation.analysis import Analysis
 # from checkpoint import Checkpoint
-# from attendee import Attendee
+# from analysis import Analysis
 # from spawnpoint import SpawnPoint
 from security_simulation.checkpoint import Checkpoint
 from security_simulation.spawnpoint import SpawnPoint
@@ -28,7 +28,7 @@ class Model:
     closed_door_time = None
 
     def __init__(self, security_personnel_sets, checkpoint_locations,
-                 spawnpoint_locations, spawn_chance, spawn_more_than_one_chance,
+                 spawnpoint_locations, spawnpoint_percentages,
                  attendee_number, gender_percentage, metal_mean, metal_std_dev, cooperative_chance,
                  closed_door_time=sys.maxsize, save_simulation=False):
         """Sets up the attendees, checkpoints, and the longest amount of time steps to run for based on the parameters.
@@ -50,7 +50,9 @@ class Model:
         self.save_sim = save_simulation
         self.attendee_set = []
         self.spawnpoint_list = []
+        self.spawnpoint_percentages = spawnpoint_percentages
         self.attendees_entered_event_set = []
+        self.closed_door_time = closed_door_time
         # Initialize the security check points.
         self.event_checkpoints = np.empty(np.shape(checkpoint_locations)[0], dtype=object)
 
@@ -64,12 +66,11 @@ class Model:
 
         # Initialize the potential spawnpoint locations
         for i in range(len(spawnpoint_locations)):
-            self.spawnpoint_list.append(SpawnPoint(spawn_chance, spawn_more_than_one_chance,
+            self.spawnpoint_list.append(SpawnPoint(closed_door_time, self.spawnpoint_percentages,
                                                    self.attendee_features, max_spawn=3,
-                                                   location=spawnpoint_locations[i], total_attendees=attendee_number))
+                                                   location=spawnpoint_locations[i], 
+                                                   total_attendees=attendee_number))
         self.max_attendees = attendee_number
-        self.closed_door_time = closed_door_time
-        # self.closed_door_time = 100
         # Start the simulation.
         self.last_sim_filename = self._sim_loop()
 
@@ -92,7 +93,8 @@ class Model:
             if attendee_id < self.max_attendees:
                 for i in range(len(self.spawnpoint_list)):
                     location = self.spawnpoint_list[i]
-                    list, num_spawned, attendee_id = location.spawn_attendee(self.current_time, attendee_id, len(self.attendee_set))
+                    list, num_spawned, attendee_id = location.spawn_attendee(self.current_time,\
+                                            attendee_id, len(self.attendee_set),self.current_time)
                     newly_added_attendees = newly_added_attendees + num_spawned
                     self.attendee_set = self.attendee_set + list
 

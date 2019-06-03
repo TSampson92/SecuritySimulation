@@ -7,7 +7,8 @@ from security_simulation.attendee import Attendee
 
 class SpawnPoint(object):
     
-    def __init__(self, spawn_chance, spawn_more_than_one_chance, attendee_init_params, max_spawn=3, location=(0, 0), total_attendees=10):
+    def __init__(self, closed_door_time, spawnpoint_percentages, attendee_init_params,\
+                 max_spawn=3, location=(0, 0), total_attendees=10):
         """
         Defines an attendee entrance (spawn) point into the simulation
         :param spawn_chance: defines the chance that an attendee will spawn at any give time step. values in range [0,1)
@@ -18,8 +19,10 @@ class SpawnPoint(object):
         :param max_spawn: The maximum number of attendees that could be spawned at any given time step defaults->3
         :param location: They (y,x) location of the spawn point defaults->(0,0)
         """
-        self.spawn_chance = spawn_chance
-        self.spawn_more_than_one_chance = spawn_more_than_one_chance
+        self.first_half_percent = spawnpoint_percentages[0]
+        self.second_half_percent = spawnpoint_percentages[1]
+        self.spawn_chance = 0
+        self.spawn_more_than_one_chance = 0
         self.attendee_init_params = attendee_init_params
         self.attendee_gender_per = attendee_init_params[0]
         self.attendee_metal_mean = attendee_init_params[1]
@@ -28,17 +31,25 @@ class SpawnPoint(object):
         self.max_spawn = max_spawn
         self.total_attendees = total_attendees
         self.location = location
+        self.max_time = closed_door_time
 
-    def spawn_attendee(self, current_time_step, current_id_num, current_num_attendees):
+    def spawn_attendee(self, current_time_step, current_id_num, current_num_attendees,current_time):
         """
         Called at each timestep at a Spawnpoint to spawn between 0 and self.max_spawn attendees. 
         If an attendee is spawned, there is another chance that more than one will be spawned.
         :param current_time_step: The current timestep of the simulation. This will be the simulation 
                                   time for all attendees spawned in this call of the method
-        :param current_id_num:passed in most current attendee id being used                          
+        :param current_id_num:passed in most current attendee id being used 
+        :param current_num_attendees:passed in most current number of attendees 
+        :param current_time:passed in the current time step                         
         """
         num_to_spawn = 0
         spawned_attendies = []
+        #within 50% of the total time, 75% of attendees will have arrived
+        if(current_time<self.max_time/2):
+           self.first_half() 
+        elif(current_time>self.max_time/2):
+           self.second_half() 
         if rand.random() < self.spawn_chance:
             if rand.random() < self.spawn_more_than_one_chance:
                 num_to_spawn = rand.randint(2, self.max_spawn)
@@ -61,6 +72,24 @@ class SpawnPoint(object):
                 print("attendee_id =", current_id_num)                    
                 spawned_attendies.append(enter_ye)
         return spawned_attendies, num_to_spawn, current_id_num
+    
+    def first_half(self):
+        """
+        Method to set the correct spawn percentages for the first half of sim               
+        """
+        self.spawn_chance = self.first_half_percent[0]
+        self.spawn_more_than_one_chance = self.first_half_percent[1]
+        self.set_spawn_chance(self.spawn_chance)
+        self.set_spawn_many_chance(self.spawn_more_than_one_chance)
+        
+    def second_half(self):
+        """
+        Method to set the correct spawn percentages for the second half of sim                  
+        """
+        self.spawn_chance = self.second_half_percent[0]
+        self.spawn_more_than_one_chance = self.second_half_percent[1]
+        self.set_spawn_chance(self.spawn_chance)
+        self.set_spawn_many_chance(self.spawn_more_than_one_chance)
     
     def get_spawn_chance(self):
         """
