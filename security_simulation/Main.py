@@ -43,8 +43,8 @@ SPAWNPOINT_LOCATIONS = [
 ]
 
 SPAWNPOINT_PERCENTAGES = [
-    (.70,.20),
-    (.20,.10),
+    (.70, .20),
+    (.20, .10),
 ]
 
 ATTENDEE_NUMBER = 10

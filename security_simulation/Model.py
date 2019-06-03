@@ -46,6 +46,18 @@ class Model:
         :param cooperative_chance:
         :param closed_door_time:
         """
+        self.parameters = {
+            'security_personnel_sets': security_personnel_sets.tolist(),
+            'checkpoint_locations': checkpoint_locations.tolist(),
+            'spawnpoint_locations': spawnpoint_locations,
+            'spawnpoint_percentages': spawnpoint_percentages,
+            'attendee_number': attendee_number,
+            'gender_percentage': gender_percentage,
+            'metal_mean': metal_mean,
+            'metal_std_dev': metal_std_dev,
+            'cooperative_chance': cooperative_chance,
+            'closed_door_time': closed_door_time
+        }
         self.sim_data_analysis = Analysis()
         self.save_sim = save_simulation
         self.attendee_set = []
@@ -53,6 +65,7 @@ class Model:
         self.spawnpoint_percentages = spawnpoint_percentages
         self.attendees_entered_event_set = []
         self.closed_door_time = closed_door_time
+        self.max_attendees = attendee_number
         # Initialize the security check points.
         self.event_checkpoints = np.empty(np.shape(checkpoint_locations)[0], dtype=object)
 
@@ -70,7 +83,7 @@ class Model:
                                                    self.attendee_features, max_spawn=3,
                                                    location=spawnpoint_locations[i], 
                                                    total_attendees=attendee_number))
-        self.max_attendees = attendee_number
+
         # Start the simulation.
         self.last_sim_filename = self._sim_loop()
 
@@ -86,6 +99,7 @@ class Model:
         # 2.Determine the new attendee's closest checkpoints
         # 3.Update checkpoint's lines to simulate security checks
         # 4.Update every attendee's movements
+        self.sim_data_analysis.init_sim_data(self.parameters, self.event_checkpoints)
         while self.current_time < self.closed_door_time:
             print("******** Current time:", self.current_time, "********")
             # spawn new attendees
@@ -93,7 +107,7 @@ class Model:
             if attendee_id < self.max_attendees:
                 for i in range(len(self.spawnpoint_list)):
                     location = self.spawnpoint_list[i]
-                    list, num_spawned, attendee_id = location.spawn_attendee(self.current_time,\
+                    list, num_spawned, attendee_id = location.spawn_attendee(self.current_time,
                                             attendee_id, len(self.attendee_set),self.current_time)
                     newly_added_attendees = newly_added_attendees + num_spawned
                     self.attendee_set = self.attendee_set + list
@@ -117,7 +131,8 @@ class Model:
             # dump state for current time step
             if self.save_sim:
                 self.sim_data_analysis.add_time_step(self.current_time, self.attendee_set,
-                                                     self.event_checkpoints, self.attendees_entered_event_set)
+                                                     self.event_checkpoints, self.attendees_entered_event_set,
+                                                     include_attendees=True, include_checkpoints=False, include_entered=False)
             self.current_time += 1
 
         # save simulation to file
