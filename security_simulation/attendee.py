@@ -167,10 +167,12 @@ class Attendee(object):
 
         if self._arrived_at_checkpoint(time_step):
             self.checkpoint_target.add_attendee(self, time_step)
-            print("Attendee", self.attendee_id, "at:", self.current_location,
+            print("Attendee", self.attendee_id, "at:", self.current_location,\
                 "has moved to checkpoint at:", self.checkpoint_target.get_location())
-            print("Attendee Walk Route: ", self.walk_route)
             self.current_location = self.checkpoint_target.get_location()
+            self.walk_route[-1] = self.current_location
+            print("Attendee Walk Route: ", self.walk_route)
+            
             return True
         
         self.inter_step()
@@ -187,8 +189,8 @@ class Attendee(object):
         c_loc = self.checkpoint_target.get_location()
         
         self.dist_to_checkpoint = self._calc_distance(c_loc)
-        if self.current_location[0] >= c_loc[0] \
-        and self.current_location[1] >= c_loc[1]:
+        if N.floor(self.current_location[0]) >= c_loc[0] \
+        and N.floor(self.current_location[1]) >= c_loc[1]:
             print("Attendee", self.attendee_id, "has reached it's target checkpoint.")
             return
         new_y = self.current_location[0] + (self.walk_speed / self.dist_to_checkpoint \
