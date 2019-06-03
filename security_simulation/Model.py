@@ -135,7 +135,7 @@ class Model:
             if self.save_sim:
                 self.sim_data_analysis.add_time_step(self.current_time, self.attendee_set,
                                                      self.event_checkpoints, self.attendees_entered_event_set,
-                                                     include_attendees=True, include_checkpoints=False, include_entered=False)
+                                                     include_attendees=True, include_checkpoints=True, include_entered=False)
             self.current_time += 1
 
         # save simulation to file

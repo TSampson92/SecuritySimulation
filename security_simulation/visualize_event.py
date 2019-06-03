@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from security_simulation.analysis import Analysis
 #from analysis import Analysis
 
-SCALING_FACTOR = 50
+SCALING_FACTOR = 3
 
 
 class Visualize(object):
@@ -18,13 +18,12 @@ class Visualize(object):
         sim_dict = ana.load_simulation_file(self.sim_file)
         # Load the image that the visualization will run over
         im = plt.imread(self.event_image)
-        implot = plt.imshow(im, aspect='equal')
+        implot = plt.imshow(im)
 
         plt.interactive(True)
         plt.show()
             
         # set the points for the checkpoints
-        print(sim_dict)
         checkpoints = sim_dict["checkpoints"]
 
         check_x = N.zeros(len(checkpoints))
@@ -41,7 +40,7 @@ class Visualize(object):
         # Each key in the sim_dict is a time_step, iterate through and
         # plot the simulation state for attendees
         attendee_scatter = plt.scatter([0],[0])
-        for i in range(25):
+        for i in range(len(sim_dict.keys()) - 2):
             print("******Timestep:", i, "******")
             time_step_dict = sim_dict[str(i)]
             attendee_list = time_step_dict['attendees']

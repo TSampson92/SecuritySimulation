@@ -13,7 +13,8 @@ from security_simulation.Model import Model
 
 SECURITY_PERSONNEL_SETS = np.array([
     [2, 1, 1],
-    [3, 1, 1]
+    [3, 1, 1],
+    [3,1,1]
 ])
 
 BAG_CHECKERS = np.array([
@@ -22,10 +23,10 @@ BAG_CHECKERS = np.array([
 ])
 
 #coordinates for checkpoints in tacoma dome using map
-CHECKPOINT_A = (100,60)
-CHECKPOINT_B = (160,80)
+CHECKPOINT_A = (175,108)
+CHECKPOINT_B = (228,126)
 CHECKPOINT_C = (180,120)
-CHECKPOINT_D = (160,160)
+CHECKPOINT_D = (240,252)
 CHECKPOINT_E = (140,180)
 CHECKPOINT_F = (80,180)
 
@@ -36,8 +37,9 @@ CHECKPOINT_F = (80,180)
 #     CHECKPOINT_F
 # ])
 CHECKPOINT_LOCATIONS = np.array([
-    (10, 10),
-    (20, 10)
+    CHECKPOINT_A,
+    CHECKPOINT_B,
+    CHECKPOINT_D
 ])
 
 # The id associated with the checkpoint setup:
@@ -45,11 +47,13 @@ CHECKPOINT_LOCATIONS = np.array([
 CHECKPOINT_CONFIGURATIONS = np.array([0, 1])
 
 #coordinates for parking lots where attendee's will spawn using map
-PARKING_D = (260,40)
-PARKING_E = (200,120)
+PARKING_D = (330,124)
+PARKING_E = (285,187)
 PARKING_F = (120,260)
+PARKING_C = (275,46)
 PARKING_H = (20,180)
 PARKING_K = (20,40)
+PARKING_A = (68,34)
 
 # For each spawnpoint location;
 # The x coordinate in the space, y coordinate in the space:
@@ -58,8 +62,10 @@ PARKING_K = (20,40)
 #     PARKING_K,
 # ]
 SPAWNPOINT_LOCATIONS = [
-    (5,5),
-    (15,15),
+    PARKING_D,
+    PARKING_E,
+    PARKING_A,
+    PARKING_C
 ]
 
 
@@ -68,7 +74,7 @@ SPAWNPOINT_PERCENTAGES = [
     (.20, .10),
 ]
 
-ATTENDEE_NUMBER = 10
+ATTENDEE_NUMBER = 200
 
 GENDER_PERCENTAGE = 0.5
 
@@ -87,7 +93,7 @@ def __init__():
     model = Model(SECURITY_PERSONNEL_SETS, CHECKPOINT_LOCATIONS,
                   SPAWNPOINT_LOCATIONS, SPAWNPOINT_PERCENTAGES,
                   ATTENDEE_NUMBER, GENDER_PERCENTAGE, METAL_MEAN, METAL_STD_DEV, 
-                  COOPERATIVE_CHANCE, closed_door_time=25, save_simulation=SAVE_SIMULATION)
+                  COOPERATIVE_CHANCE, closed_door_time=500, save_simulation=SAVE_SIMULATION)
 
 
 if __name__ == "__main__":
