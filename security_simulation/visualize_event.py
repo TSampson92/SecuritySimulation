@@ -1,6 +1,6 @@
 import numpy as N
 import matplotlib.pyplot as plt
-from security_simulation.analysis import Analysis
+from security_simulation.filedump import FileDump
 #from analysis import Analysis
 
 SCALING_FACTOR = 3

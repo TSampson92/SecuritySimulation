@@ -11,6 +11,7 @@ HIGH_WALK_SPEED = 1.51
 
 
 class Attendee(object):
+    next_id = 1
     def __init__(self, gender, metal_mean, metal_std_dev, coop_chance, attendee_id, current_location=(0, 0), time_entered=0, has_bag=False):
         """
         Defines the behavior and state of an attendee
@@ -49,7 +50,8 @@ class Attendee(object):
         self.status = 0  # 1= bag_check, 2 = metal detector
         self.checkpoint_target = None
         self.walk_route = [current_location]
-        self.attendee_id = attendee_id
+        self.attendee_id = Attendee.next_id + 1
+        Attendee.next_id += 1
         self.walk_speed = rand.uniform(LOW_WALK_SPEED, HIGH_WALK_SPEED)
         self.dist_to_checkpoint = 0.0
         self.at_checkpoint = False
@@ -181,8 +183,7 @@ class Attendee(object):
                 "has moved to checkpoint at:", self.checkpoint_target.get_location())
             self.current_location = self.checkpoint_target.get_location()
             self.walk_route[-1] = tuple(self.current_location)
-            #print("Attendee Walk Route: ", self.walk_route)
-            
+            # print("Attendee Walk Route: ", self.walk_route)        
             return True
         self.find_checkpoint(checkpoints, time_step)
         self.inter_step()
@@ -252,7 +253,7 @@ class Attendee(object):
                 temp_walk_route.append([float(i[0]), float(i[1])])
         return_dict['walk_route'] = temp_walk_route
         return_dict['current_location'] = [float(i) for i in self.current_location] if self.current_location is not None else None
-        return_dict['checkpoint_target'] = self.checkpoint_target.id if self.checkpoint_target else None
+        return_dict['checkpoint_target'] = self.checkpoint_target.id if isinstance(self.checkpoint_target, Checkpoint) else None
         return_dict['checkpoint_vector'] = (int(self.checkpoint_vector[0]), int(self.checkpoint_vector[1])) if self.checkpoint_vector else None
         return return_dict
 

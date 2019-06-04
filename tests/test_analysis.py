@@ -1,11 +1,12 @@
 from security_simulation.attendee import Attendee
+from security_simulation.filedump import FileDump
 from security_simulation.analysis import Analysis
 from security_simulation.checkpoint import Checkpoint
 import numpy as N
 
 
 def test_file_output():
-    sim_data = Analysis()
+    sim_data = FileDump()
     attendee_list = get_test_attendees()
     checkpoint_list = [get_test_checkpoint(), get_test_checkpoint()]
     sim_data.add_time_step(1, attendee_list, checkpoint_list, [])
@@ -13,13 +14,11 @@ def test_file_output():
     file = open(file_name, 'r')
     assert file is not None
     file.close()
-    loaded_json = sim_data.load_simulation_file(file_name)
+    loaded_json = Analysis.load_simulation_file(file_name)
     assert isinstance(loaded_json, dict)
     attendees = loaded_json['1']['attendees']
     assert isinstance(attendees, list)
     assert len(attendees) == 5
-    assert attendees[0]['total_wait'] == 1000
-    assert attendees[4]['total_wait'] == 1700
 
 
 def get_test_checkpoint():
@@ -34,9 +33,5 @@ def get_test_checkpoint():
 
 def get_test_attendees():
     attendees = [Attendee(.5, 0.3, .25, .5, i) for i in range(5)]
-    attendees[0].calc_total_wait(1000)
-    attendees[1].calc_total_wait(1500)
-    attendees[2].calc_total_wait(500)
-    attendees[3].calc_total_wait(2000)
-    attendees[4].calc_total_wait(1700)
+
     return attendees
