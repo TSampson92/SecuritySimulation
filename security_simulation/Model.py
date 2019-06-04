@@ -11,7 +11,7 @@ import numpy as np
 # from checkpoint import Checkpoint
 # from analysis import Analysis
 # from spawnpoint import SpawnPoint
-from security_simulation.analysis import Analysis
+from security_simulation.filedump import FileDump
 from security_simulation.checkpoint import Checkpoint
 from security_simulation.spawnpoint import SpawnPoint
 
@@ -60,7 +60,7 @@ class Model:
             'closed_door_time': closed_door_time,
             'spawnpoint_percentages': spawnpoint_percentages
         }
-        self.sim_data_analysis = Analysis()
+        self.sim_data_analysis = FileDump()
         self.save_sim = save_simulation
         self.save_minimal = minimal_save
         self.save_final_state_only = save_only_final_state

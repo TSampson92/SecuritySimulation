@@ -244,7 +244,7 @@ class Attendee(object):
                 temp_walk_route.append([float(i[0]), float(i[1])])
         return_dict['walk_route'] = temp_walk_route
         return_dict['current_location'] = [float(i) for i in self.current_location] if self.current_location is not None else None
-        return_dict['checkpoint_target'] = self.checkpoint_target.id if self.checkpoint_target else None
+        return_dict['checkpoint_target'] = self.checkpoint_target.id if isinstance(self.checkpoint_target, Checkpoint) else None
         return_dict['checkpoint_vector'] = (int(self.checkpoint_vector[0]), int(self.checkpoint_vector[1])) if self.checkpoint_vector else None
         return return_dict
 

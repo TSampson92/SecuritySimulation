@@ -8,7 +8,6 @@ reliably open a file in the same directory as a Python script"
 import numpy as np
 import os
 import json
-
 from security_simulation.Model import Model
 
 #######################################
@@ -141,6 +140,7 @@ def run_sim_from_file(file_name):
                   COOPERATIVE_CHANCE, closed_door_time=CLOSED_DOOR_TIME, save_simulation=SAVE_SIMULATION,
                   minimal_save=MINIMAL_SAVE, save_only_final_state=SAVE_ONLY_FINAL_STATE)
     print('--- simulation end ---')
+    return model
 
 
 if __name__ == "__main__":
