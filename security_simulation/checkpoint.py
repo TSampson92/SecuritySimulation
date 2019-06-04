@@ -132,7 +132,7 @@ class Checkpoint(object):
                     # free agent up
                     agent.busy = False
                     print("Attendee:", attendee.attendee_id, "entered")
-                    print("Attendee:", attendee.attendee_id, " used route:", attendee.walk_route)
+                    # print("Attendee:", attendee.attendee_id, " used route:", attendee.walk_route)
                     agent.assigned_attendee = None
             if agent.busy or np.size(self.main_queue) == 0:  # agent is still busy:
                 pass  # do nothing

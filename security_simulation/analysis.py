@@ -138,3 +138,6 @@ class Analysis:
             i += 1
 
         return N.average(wait_time), N.min(wait_time), N.max(wait_time)
+
+    def sensitivity_test_wait_time(self, base_config_filename, attribute_to_adjust_name, values_list, num_steps=10):
+        pass

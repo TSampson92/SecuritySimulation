@@ -173,7 +173,7 @@ class Attendee(object):
                 "has moved to checkpoint at:", self.checkpoint_target.get_location())
             self.current_location = self.checkpoint_target.get_location()
             self.walk_route[-1] = tuple(self.current_location)
-            print("Attendee Walk Route: ", self.walk_route)
+            # print("Attendee Walk Route: ", self.walk_route)
             
             return True
         
