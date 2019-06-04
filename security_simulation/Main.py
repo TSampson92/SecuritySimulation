@@ -74,7 +74,7 @@ SPAWNPOINT_PERCENTAGES = [
     (.20, .10),
 ]
 
-ATTENDEE_NUMBER = 200
+ATTENDEE_NUMBER = 2000
 
 GENDER_PERCENTAGE = 0.5
 
@@ -86,6 +86,11 @@ COOPERATIVE_CHANCE = 0.9
 
 SAVE_SIMULATION = True
 
+MINIMAL_SAVE = False
+
+SAVE_ONLY_FINAL_STATE = False
+
+CLOSED_DOOR_TIME = 300  # seconds
 
 
 def __init__():
@@ -93,7 +98,8 @@ def __init__():
     model = Model(SECURITY_PERSONNEL_SETS, CHECKPOINT_LOCATIONS,
                   SPAWNPOINT_LOCATIONS, SPAWNPOINT_PERCENTAGES,
                   ATTENDEE_NUMBER, GENDER_PERCENTAGE, METAL_MEAN, METAL_STD_DEV, 
-                  COOPERATIVE_CHANCE, closed_door_time=500, save_simulation=SAVE_SIMULATION)
+                  COOPERATIVE_CHANCE, closed_door_time=CLOSED_DOOR_TIME, save_simulation=SAVE_SIMULATION,
+                  minimal_save=MINIMAL_SAVE, save_only_final_state=SAVE_ONLY_FINAL_STATE)
 
 
 if __name__ == "__main__":

@@ -91,16 +91,28 @@ class Analysis:
         :param state_dict:
         :return: filename
         """
-        data = state_dict
         filename = 'SecuritySimulationData_' + str(time.time()) + '.json'
+        print('saving simulation data to: %s' % filename)
 
-        with open(filename, 'w') as f:
-            for chunk in json.JSONEncoder().iterencode(data):
-                f.write(chunk)
+        # if show_progress:  # slower
+        #     state_dict = list(json.JSONEncoder().iterencode(state_dict))
+        #     five_percent = len(state_dict)//20
+        #     count = 0
+        #     with open(filename, 'w') as file:
+        #         for chunk in state_dict:
+        #             file.write(chunk)
+        #             if count % five_percent == 0:
+        #                 print(str((count//five_percent) * 5) + '%, ', end='')
+        #             count += 1
+        # else:
+
+        with open(filename, 'w') as file:
+            for chunk in json.JSONEncoder().iterencode(state_dict):
+                file.write(chunk)
 
         return filename
 
-    def load_simulation_file(self, filename):
+    def load_simulation_file(filename):
         """
         Load json file containing simulation data as a dict
         :param filename: name of simulation file to read
@@ -110,3 +122,19 @@ class Analysis:
         with open(filename, 'r') as file:
             data = json.loads(file.read())
         return data
+
+    @staticmethod
+    def avg_min_max_wait_time(final_state_dict):
+        """
+        calulates average, minimum, and maximum wait times for attendees
+        must be run on full data
+        :param final_state_dict: state_dict of the final time step of a simulation
+        :return: tuple(avg, min, max)
+        """
+        wait_time = N.ones(len(final_state_dict.get('attendees')))
+        i = 0
+        for v in final_state_dict.get('attendees'):
+            wait_time[i] = v['total_wait']
+            i += 1
+
+        return N.average(wait_time), N.min(wait_time), N.max(wait_time)
