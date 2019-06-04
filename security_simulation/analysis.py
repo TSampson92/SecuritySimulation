@@ -36,29 +36,35 @@ class Analysis:
     @staticmethod
     def sensitivity_test_wait_time(base_config_filename, attribute_to_adjust_name, values_list, num_steps=3):
         """
-        Runs multiple simulations varying one parameter
+        Runs multiple simulations varying one parameter producing a results file
         e.g. Analysis.sensitivity_test_wait_time('input_parameters.txt', 'METAL_MEAN', [.1, .2, .3, .4, .5], num_steps=5)
         :param base_config_filename: path to file of the base config file to use
         :param attribute_to_adjust_name: name of attribute being varied in the config file
         :param values_list: list containing all the values fo the attribute_to_adjust that will be used
         :param num_steps:  number of simulations to run, needs to be same length as values list
-        :return: filename of results file
+        :return: filename of results file. results file is a json file that contains a dictionary with the keys "0" to
+                 num_steps, each key representing one simulation. key "0" is the simulation using the value in
+                 values_list[0].
         """
-        base_config_data = None
+        loaded_config_data = None
         with open(base_config_filename, 'r') as file:
-            base_config_data = json.loads(file.read())
+            loaded_config_data = json.loads(file.read())
 
+        # generate needed config files
         config_file_names = []
         for i in range(num_steps):
             new_cofig_name = 'sensitivity_config_' + str(time.time()) + '_' + str(i)
-            base_config_data[attribute_to_adjust_name] = values_list[i]
+            loaded_config_data[attribute_to_adjust_name] = values_list[i]
             with open(new_cofig_name, 'w') as file:
-                file.write(json.dumps(base_config_data))
+                file.write(json.dumps(loaded_config_data))
             config_file_names.append(new_cofig_name)
 
+        # run a simulation for each config file
         sim_data_file_names = []
         for name in config_file_names:
             sim_data_file_names.append(run_sim_from_file(name).last_sim_filename)
+
+        # analyze data from simulations to get min, max, avg
         results = {}
         i = 0
         for name in sim_data_file_names:
@@ -68,6 +74,7 @@ class Analysis:
             results[str(i)] = Analysis.avg_min_max_wait_time(sim_data[last_time_step])
             i += 1
 
+        # write the results to file
         results_file_name = 'sensitivity_results_' + str(time.time())
         with open (results_file_name, 'w') as file:
             file.write(json.dumps(results))
