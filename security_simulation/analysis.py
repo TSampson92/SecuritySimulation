@@ -76,11 +76,12 @@ class Analysis:
                 average.append(results[0])
                 minimum.append(results[1])
                 maximum.append(results[2])
-            plt.plot(range(5, (len(data)+1)*5, 5), minimum, color='blue')
-            plt.plot(range(5, (len(data)+1)*5, 5), maximum, color='red')
-            plt.plot(range(5, (len(data)+1)*5, 5), average, color='orange')
+            plt.plot(range(0, (len(data))), minimum, color='blue')
+            plt.plot(range(0, (len(data))), maximum, color='red')
+            plt.plot(range(0, (len(data))), average, color='orange')
             plt.show()
 
 
 # example plotting sensitivity to num attendees
 # Analysis.plot_results(Analysis.sensitivity_test_wait_time('input_parameters.txt', 'ATTENDEE_NUMBER', [5 * i for i in range(1,26)], num_steps=25))
+# Analysis.plot_results(Analysis.sensitivity_test_wait_time('input_parameters.txt', 'METAL_MEAN', [.1, .2, .3, .4, .5], num_steps=5))
