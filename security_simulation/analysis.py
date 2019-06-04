@@ -35,6 +35,15 @@ class Analysis:
 
     @staticmethod
     def sensitivity_test_wait_time(base_config_filename, attribute_to_adjust_name, values_list, num_steps=3):
+        """
+        Runs multiple simulations varying one parameter
+        e.g. Analysis.sensitivity_test_wait_time('input_parameters.txt', 'METAL_MEAN', [.1, .2, .3, .4, .5], num_steps=5)
+        :param base_config_filename: path to file of the base config file to use
+        :param attribute_to_adjust_name: name of attribute being varied in the config file
+        :param values_list: list containing all the values fo the attribute_to_adjust that will be used
+        :param num_steps:  number of simulations to run, needs to be same length as values list
+        :return: filename of results file
+        """
         base_config_data = None
         with open(base_config_filename, 'r') as file:
             base_config_data = json.loads(file.read())
@@ -66,6 +75,11 @@ class Analysis:
 
     @staticmethod
     def plot_results(results_file_name):
+        """
+        plots avg, min, max from sensitivity analysis
+        :param results_file_name: filename from output of sensitivity_test_wait_time
+        :return:
+        """
         with open(results_file_name, 'r') as file:
             data = json.loads(file.read())
             average = []
