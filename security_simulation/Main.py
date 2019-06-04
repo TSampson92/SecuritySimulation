@@ -134,12 +134,14 @@ def run_sim_from_file(file_name):
 
     CLOSED_DOOR_TIME = input_object['CLOSED_DOOR_TIME']  # seconds
 
+    RUN_UNTIL_DONE = input_object["RUN_UNTIL_DONE"]
+
     print('--- simulation start ---')
     model = Model(SECURITY_PERSONNEL_SETS, CHECKPOINT_LOCATIONS,
                   SPAWNPOINT_LOCATIONS, SPAWNPOINT_PERCENTAGES,
                   ATTENDEE_NUMBER, GENDER_PERCENTAGE, METAL_MEAN, METAL_STD_DEV,
                   COOPERATIVE_CHANCE, closed_door_time=CLOSED_DOOR_TIME, save_simulation=SAVE_SIMULATION,
-                  minimal_save=MINIMAL_SAVE, save_only_final_state=SAVE_ONLY_FINAL_STATE)
+                  minimal_save=MINIMAL_SAVE, save_only_final_state=SAVE_ONLY_FINAL_STATE, run_until_done=RUN_UNTIL_DONE)
     print('--- simulation end ---')
     return model
 

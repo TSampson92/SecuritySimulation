@@ -2,6 +2,7 @@ import json
 import numpy as N
 from security_simulation.Main import run_sim_from_file
 import time
+import matplotlib.pyplot as plt
 
 class Analysis:
     from security_simulation.Main import run_sim_from_file
@@ -63,5 +64,23 @@ class Analysis:
             file.write(json.dumps(results))
         return results_file_name
 
+    @staticmethod
+    def plot_results(results_file_name):
+        with open(results_file_name, 'r') as file:
+            data = json.loads(file.read())
+            average = []
+            minimum = []
+            maximum = []
+            for i in range(len(data)):
+                results = data[str(i)]
+                average.append(results[0])
+                minimum.append(results[1])
+                maximum.append(results[2])
+            plt.plot(range(5, (len(data)+1)*5, 5), minimum, color='blue')
+            plt.plot(range(5, (len(data)+1)*5, 5), maximum, color='red')
+            plt.plot(range(5, (len(data)+1)*5, 5), average, color='orange')
+            plt.show()
 
-# Analysis.sensitivity_test_wait_time('input_parameters.txt', 'ATTENDEE_NUMBER', [10, 20, 30, 40], num_steps=4)
+
+# example plotting sensitivity to num attendees
+# Analysis.plot_results(Analysis.sensitivity_test_wait_time('input_parameters.txt', 'ATTENDEE_NUMBER', [5 * i for i in range(1,26)], num_steps=25))

@@ -10,7 +10,7 @@ class FileDump:
 
     def add_time_step(self, time_step, attendee_list, checkpoint_list,
                       entered_event_list, include_attendees=True,
-                      include_checkpoints=False, include_entered=False, minimal=True):
+                      include_checkpoints=False, include_entered=False, minimal=True, use_current_time_as_total=False):
         """
         Add state of current time_step to analysis data
         :param time_step: current simulation time step
@@ -24,6 +24,8 @@ class FileDump:
                                                        include_attendees=include_attendees,
                                                        include_checkpoints=include_checkpoints,
                                                        include_entered=include_entered, minimal=minimal)
+        if use_current_time_as_total:
+            self.data['params']['closed_door_time'] = time_step
 
     def init_sim_data(self, params, checkpoint_list):
         checkpoint_json_list = []

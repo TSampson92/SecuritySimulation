@@ -31,7 +31,8 @@ class Model:
     def __init__(self, security_personnel_sets, checkpoint_locations,
                  spawnpoint_locations, spawnpoint_percentages,
                  attendee_number, gender_percentage, metal_mean, metal_std_dev, cooperative_chance,
-                 closed_door_time=sys.maxsize, save_simulation=False, minimal_save=True, save_only_final_state=False):
+                 closed_door_time=sys.maxsize, save_simulation=False, minimal_save=True, save_only_final_state=False,
+                 run_until_done=False):
         """Sets up the attendees, checkpoints, and the longest amount of time steps to run for based on the parameters.
 
         :param checkpoint_positions:
@@ -70,6 +71,7 @@ class Model:
         self.attendees_entered_event_set = []
         self.closed_door_time = closed_door_time
         self.max_attendees = attendee_number
+        self.run_until_done = run_until_done
         # Initialize the security check points.
         self.event_checkpoints = np.empty(np.shape(checkpoint_locations)[0], dtype=object)
 
@@ -106,44 +108,53 @@ class Model:
         # 3.Update checkpoint's lines to simulate security checks
         # 4.Update every attendee's movements
         self.sim_data_analysis.init_sim_data(self.parameters, self.event_checkpoints)
-        while self.current_time < self.closed_door_time:
-            print("******** Current time:", self.current_time, "********")
-            # spawn new attendees
-            newly_added_attendees = 0
-            if attendee_id < self.max_attendees:
-                for i in range(len(self.spawnpoint_list)):
-                    location = self.spawnpoint_list[i]
-                    list, num_spawned, attendee_id = location.spawn_attendee(self.current_time,
-                                            attendee_id, len(self.attendee_set),self.current_time)
-                    newly_added_attendees = newly_added_attendees + num_spawned
-                    self.attendee_set = self.attendee_set + list
 
-            # Find the nearest checkpoint for the newly spawned attendee's
-            index = len(self.attendee_set) - newly_added_attendees
-            while index < len(self.attendee_set):
-                attendee = self.attendee_set[index]
-                attendee.find_checkpoint(self.event_checkpoints)
-                index = index + 1
+        while self.current_time < self.closed_door_time and not self.run_until_done:
+            self._single_step(attendee_id)
 
-            # For each checkpoint, simulate its state at this time step.
-            for checkpoint_index in np.arange(np.size(self.event_checkpoints)):
-                current_checkpoint = self.event_checkpoints[checkpoint_index]
-                current_checkpoint.update(self.current_time)
-
-            # update each attendee's position for this time step
-            for attendee_index in np.arange(np.size(self.attendee_set)):
-                self.attendee_set[attendee_index].update(self.current_time)
-
-            # dump state for current time step
-            if self.save_sim and not self.save_final_state_only:
-                self.sim_data_analysis.add_time_step(self.current_time, self.attendee_set,
-                                                     self.event_checkpoints, self.attendees_entered_event_set,
-                                                     include_attendees=True, include_checkpoints=True, include_entered=False, minimal=self.save_minimal)
-            self.current_time += 1
+        while len(self.attendees_entered_event_set) != self.max_attendees and self.run_until_done:
+            self._single_step(attendee_id)
 
         # save simulation to file
         if self.save_sim:
-            if self.save_final_state_only:
-                self.sim_data_analysis.add_time_step(self.current_time, self.attendee_set, self.event_checkpoints, self.attendees_entered_event_set,
-                                                     include_attendees=True, include_checkpoints=True, minimal=False)
+
+            self.sim_data_analysis.add_time_step(self.current_time, self.attendee_set, self.event_checkpoints, self.attendees_entered_event_set,
+                                                     include_attendees=True, include_checkpoints=True, minimal=False, use_current_time_as_total=self.run_until_done)
             return self.sim_data_analysis.dump_simulation_to_file()
+
+    def _single_step(self, attendee_id,  step_size=1):
+        print("******** Current time:", self.current_time, "********")
+        # spawn new attendees
+        newly_added_attendees = 0
+        if attendee_id < self.max_attendees:
+            for i in range(len(self.spawnpoint_list)):
+                location = self.spawnpoint_list[i]
+                list, num_spawned, attendee_id = location.spawn_attendee(self.current_time,
+                                                                         attendee_id, len(self.attendee_set),
+                                                                         self.current_time)
+                newly_added_attendees = newly_added_attendees + num_spawned
+                self.attendee_set = self.attendee_set + list
+
+        # Find the nearest checkpoint for the newly spawned attendee's
+        index = len(self.attendee_set) - newly_added_attendees
+        while index < len(self.attendee_set):
+            attendee = self.attendee_set[index]
+            attendee.find_checkpoint(self.event_checkpoints)
+            index = index + 1
+
+        # For each checkpoint, simulate its state at this time step.
+        for checkpoint_index in np.arange(np.size(self.event_checkpoints)):
+            current_checkpoint = self.event_checkpoints[checkpoint_index]
+            current_checkpoint.update(self.current_time)
+
+        # update each attendee's position for this time step
+        for attendee_index in np.arange(np.size(self.attendee_set)):
+            self.attendee_set[attendee_index].update(self.current_time)
+
+        # dump state for current time step
+        if self.save_sim and not self.save_final_state_only:
+            self.sim_data_analysis.add_time_step(self.current_time, self.attendee_set,
+                                                 self.event_checkpoints, self.attendees_entered_event_set,
+                                                 include_attendees=True, include_checkpoints=True,
+                                                 include_entered=False, minimal=self.save_minimal)
+        self.current_time += step_size

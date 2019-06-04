@@ -28,6 +28,7 @@
 	"SAVE_SIMULATION": true,
 	"CLOSED_DOOR_TIME": 500,
 	"SAVE_ONLY_FINAL_STATE" : true,
-	"MINIMAL_SAVE": true
+	"MINIMAL_SAVE": true,
+	"RUN_UNTIL_DONE": true
 
 }
