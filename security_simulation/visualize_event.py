@@ -1,7 +1,7 @@
 import numpy as N
 import matplotlib.pyplot as plt
 from security_simulation.filedump import FileDump
-#from analysis import Analysis
+from analysis import Analysis
 
 SCALING_FACTOR = 3
 
@@ -14,8 +14,7 @@ class Visualize(object):
 
     def plot_sim(self):
         # Load the simulation output file
-        ana = Analysis()
-        sim_dict = ana.load_simulation_file(self.sim_file)
+        sim_dict = Analysis.load_simulation_file(self.sim_file)
         # Load the image that the visualization will run over
         im = plt.imread(self.event_image)
         implot = plt.imshow(im)
