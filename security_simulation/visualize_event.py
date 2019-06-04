@@ -43,16 +43,13 @@ class Visualize(object):
         check_x = check_x * SCALING_FACTOR
         check_y = check_y * SCALING_FACTOR
         print("Checkpoint count:", len(checkpoints))
-        checkpoint_scatter = plt.scatter(check_x, check_y, s=10**2, c='r')
+        checkpoint_scatter = plt.scatter(check_x, check_y, s=10**2, c='r',label='Security Checkpoints')
          
         # Each key in the sim_dict is a time_step, iterate through and
         # plot the simulation state for attendees
         attendee_scatter = plt.scatter([0],[0])
         plt.gca().axes.get_xaxis().set_visible(False)
         plt.gca().axes.get_yaxis().set_visible(False)
-        # cur_axes = plt.gca()
-        # cur_axes.set_yticklabels([])
-        # cur_axes.set_xticklabels([])
         for i in range(len(sim_dict.keys()) - 2):
             print("******Timestep:", i, "******")
             time_step_dict = sim_dict[str(i)]
@@ -69,7 +66,8 @@ class Visualize(object):
             x_pos = x_pos * SCALING_FACTOR
             y_pos = y_pos * SCALING_FACTOR
             attendee_scatter.remove()
-            attendee_scatter = plt.scatter(x_pos, y_pos, c='g')
+            attendee_scatter = plt.scatter(x_pos, y_pos, c='g',label='Attendees')
+            plt.gca().axes.legend(loc='lower right',fontsize = 'x-small')
             plt.draw()
             plt.pause(.1)
             print("Attendee count at timestep", i, ":", attendee_count)        
