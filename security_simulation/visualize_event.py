@@ -9,10 +9,19 @@ SCALING_FACTOR = 3
 class Visualize(object):
     # https://stackoverflow.com/questions/5073386/how-do-you-directly-overlay-a-scatter-plot-on-top-of-a-jpg-image-in-matplotlib
     def __init__(self, sim_file, event_image):
+        """
+        Simulation class used to visualize the movements of attendees
+        :param sim_file: Name of json file that was created when Main.py was run
+        :param event_image: Map of tacoma dome
+        """
         self.sim_file = sim_file
         self.event_image = event_image
 
     def plot_sim(self):
+        """
+        Core function to plot attendee's spawning, and moving to and through a 
+        checkpoint
+        """
         # Load the simulation output file
         sim_dict = Analysis.load_simulation_file(self.sim_file)
         # Load the image that the visualization will run over
@@ -39,6 +48,11 @@ class Visualize(object):
         # Each key in the sim_dict is a time_step, iterate through and
         # plot the simulation state for attendees
         attendee_scatter = plt.scatter([0],[0])
+        plt.gca().axes.get_xaxis().set_visible(False)
+        plt.gca().axes.get_yaxis().set_visible(False)
+        # cur_axes = plt.gca()
+        # cur_axes.set_yticklabels([])
+        # cur_axes.set_xticklabels([])
         for i in range(len(sim_dict.keys()) - 2):
             print("******Timestep:", i, "******")
             time_step_dict = sim_dict[str(i)]
@@ -62,6 +76,7 @@ class Visualize(object):
 
 
 if __name__ == "__main__":
+    #Please provide the name of the json file that was last generated when prompted
     file_name = input("Enter the sim data filename: ")
     if file_name == 'test':
         file_name = 'test_sim_data_file.json'
