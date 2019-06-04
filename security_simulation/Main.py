@@ -8,6 +8,7 @@ reliably open a file in the same directory as a Python script"
 import numpy as np
 import os
 import json
+
 from security_simulation.Model import Model
 
 #######################################
