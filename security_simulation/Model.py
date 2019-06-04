@@ -139,7 +139,7 @@ class Model:
         index = len(self.attendee_set) - newly_added_attendees
         while index < len(self.attendee_set):
             attendee = self.attendee_set[index]
-            attendee.find_checkpoint(self.event_checkpoints)
+            attendee.find_checkpoint(self.event_checkpoints, self.current_time)
             index = index + 1
 
         # For each checkpoint, simulate its state at this time step.
@@ -149,7 +149,7 @@ class Model:
 
         # update each attendee's position for this time step
         for attendee_index in np.arange(np.size(self.attendee_set)):
-            self.attendee_set[attendee_index].update(self.current_time)
+            self.attendee_set[attendee_index].update(self.current_time, self.event_checkpoints)
 
         # dump state for current time step
         if self.save_sim and not self.save_final_state_only:

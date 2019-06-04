@@ -26,9 +26,9 @@ def test_attendee_find_checkpoint():
     check_3 = Checkpoint([], location=(4,7))
 
     checkpoints = [check_1, check_2, check_3]
-    att_1.find_checkpoint(checkpoints)
-    att_2.find_checkpoint(checkpoints)
-    att_3.find_checkpoint(checkpoints)
+    att_1.find_checkpoint(checkpoints, 0)
+    att_2.find_checkpoint(checkpoints, 0)
+    att_3.find_checkpoint(checkpoints, 0)
 
     assert att_1.checkpoint_target is check_1
     assert att_2.checkpoint_target is check_2
@@ -48,10 +48,10 @@ def test_attendee_wait_time():
 def test_attendee_is_at_checkpoint():
     att_1 = Attendee(.5, 0.3, .25, .5, 1)
     check_1 = Checkpoint([], location=(6,8))
-    att_1.find_checkpoint([check_1])
+    att_1.find_checkpoint([check_1], 0)
     print("Time it takes attendee to make it to checkpoint: "\
          + str(att_1.get_time_step_to_enqueue()))
-    att_1.update(att_1.get_time_step_to_enqueue())
+    att_1.update(att_1.get_time_step_to_enqueue(), att_1.get_time_step_to_enqueue)
     assert att_1.current_location == check_1.get_location()
     assert check_1.get_line_length() == 1
 

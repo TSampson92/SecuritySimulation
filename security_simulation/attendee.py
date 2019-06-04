@@ -72,7 +72,7 @@ class Attendee(object):
     def _set_checkpoint_vector(self, c_loc):
         self.checkpoint_vector = (c_loc[0] - self.current_location[0], c_loc[1] - self.current_location[1])
 
-    def find_checkpoint(self, checkpoints):
+    def find_checkpoint(self, checkpoints, current_time):
         """Finds a checkpoint based on proximity and checkpoint queue size 
         
         The first factor is the proximity of a checkpoint, if a checkpoint is close, line length will be checked
@@ -87,6 +87,7 @@ class Attendee(object):
             """
         checkpoint_line_len = N.zeros(len(checkpoints), dtype=float)
         checkpoint_distances = N.zeros(len(checkpoints), dtype=float)
+        checkpoint_chosen = False
 
         for i in range(len(checkpoints)):
             checkpoint_line_len[i] = checkpoints[i].get_line_length()
@@ -107,18 +108,25 @@ class Attendee(object):
         checkpoint_rankings = checkpoint_ratios + checkpoint_line_len
         min_index = N.argmin(checkpoint_rankings)
         # found the target checkpoint, set that as the target_checkpoint
-        self.checkpoint_target = checkpoints[min_index]
-        self._calc_checkpoint_arrival(checkpoint_distances[min_index])
-        self._set_checkpoint_vector(self.checkpoint_target.get_location())
+        checkpoint_candidate = checkpoints[min_index]
+        if self.checkpoint_target is None or self.checkpoint_target is not checkpoint_candidate:
+            if self.checkpoint_target is not None:
+                print("Attendee:", self.attendee_id, "has changed checkpoint target from:",\
+                self.checkpoint_target.get_location(), "to checkpoint at:",\
+                checkpoint_candidate.get_location())
+            self.checkpoint_target = checkpoint_candidate
+            self._calc_checkpoint_arrival(checkpoint_distances[min_index], current_time)
+            self._set_checkpoint_vector(self.checkpoint_target.get_location())
+        
         return self.checkpoint_target
 
-    def _calc_checkpoint_arrival(self, distance):
+    def _calc_checkpoint_arrival(self, distance, current_time):
         """ Calculate the time step that an attendee arrives at their target checkpoint 
             distance: the distance in meters from attendee's spawn to the checkpoint
             Generates a random speed in mps from average walking speeds"""
         # From: https://en.wikipedia.org/wiki/Walking, use random float between 4.51() kph (1.25 mps) to 5.43 kph (1.51 mps) to simulate
         # a walking speed
-        self.time_step_to_enqueue = int(N.ceil((distance / self.walk_speed)) + self.time_entered)
+        self.time_step_to_enqueue = int(N.ceil((distance / self.walk_speed)) + current_time)
         self.dist_to_checkpoint = distance
         return self.time_step_to_enqueue
 
@@ -155,7 +163,7 @@ class Attendee(object):
         
         return False
 
-    def update(self, time_step):
+    def update(self, time_step, checkpoints):
         """
         Performs a check on an attendee's arrival time at their chosen checkpoint
         If the attendee has arrived, they move into the queue of that checkpoint
@@ -175,10 +183,9 @@ class Attendee(object):
                 "has moved to checkpoint at:", self.checkpoint_target.get_location())
             self.current_location = self.checkpoint_target.get_location()
             self.walk_route[-1] = tuple(self.current_location)
-            # print("Attendee Walk Route: ", self.walk_route)
-            
+            # print("Attendee Walk Route: ", self.walk_route)        
             return True
-        
+        self.find_checkpoint(checkpoints, time_step)
         self.inter_step()
         return False
     
