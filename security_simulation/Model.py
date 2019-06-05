@@ -112,8 +112,9 @@ class Model:
         while self.current_time < self.closed_door_time and not self.run_until_done:
             self._single_step(attendee_id)
 
-        while len(self.attendees_entered_event_set) != self.max_attendees and self.run_until_done:
-            self._single_step(attendee_id)
+        while len(self.attendees_entered_event_set) < self.max_attendees and self.run_until_done:
+            attendee_id = self._single_step(attendee_id)
+
 
         # save simulation to file
         if self.save_sim:
@@ -158,3 +159,4 @@ class Model:
                                                  include_attendees=True, include_checkpoints=True,
                                                  include_entered=False, minimal=self.save_minimal)
         self.current_time += step_size
+        return attendee_id
