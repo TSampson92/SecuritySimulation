@@ -35,6 +35,22 @@ class Analysis:
         return N.average(wait_time), N.min(wait_time), N.max(wait_time)
 
     @staticmethod
+    def get_wait_times(final_state_dict):
+        """
+        gets wait times for attendees in a simulation
+        must be run on full data
+        :param final_state_dict: state_dict of the final time step of a simulation
+        :return: tuple(avg, min, max)
+        """
+        wait_time = [1] * len(final_state_dict.get('attendees'))
+        i = 0
+        for v in final_state_dict.get('attendees'):
+            wait_time[i] = v['total_wait']
+            i += 1
+
+        return wait_time
+
+    @staticmethod
     def sensitivity_test(base_config_filename,
                          attribute_to_adjust_name, 
                          values_list, 
@@ -127,6 +143,21 @@ class Analysis:
             legend.get_frame().set_facecolor('C7')
             plt.show()
 
+    @staticmethod
+    def wait_time_histogram(num_runs=5, title='Wait Time Histogram', bins=30):
+        wait_times = []
+        for i in range(num_runs):
+            simulation_file = run_sim_from_file('input_parameters.txt').last_sim_filename
+            with open(simulation_file, 'r') as file:
+                data = json.loads(file.read())
+                params = data['params']
+                key = params['closed_door_time']
+                last_time_step_data = data[str(key)]
+                wait_times += Analysis.get_wait_times(last_time_step_data)
+        plt.hist(wait_times, bins)
+        plt.title(title + " num_attendees=" + str(len(wait_times)/num_runs) + ', num_runs=' + str(num_runs) + ',\n average_time=' + str(N.average(wait_times)))
+        plt.show()
+
 
 # example plotting sensitivity to num attendees
 # Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt',
@@ -145,11 +176,12 @@ class Analysis:
 #
 # Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt',
 #                                                 'SECURITY_PERSONNEL_SETS',
-#                                                 [[[1,10,1]],[[2,10,1]],[[3,10,1]],[[4,10,1]],[[5,10,1]]],
+#                                                 [[[2,10,1]]],
 #                                                 'attendees',
 #                                                 'total_wait',
-#                                                 num_steps=5),
+#                                                 num_steps=1),
 #                       'Wait Time Based on Bag Checkers with 10 metal detectors',
 #                       'Number of bag checkers')
-                                                
+
+Analysis.wait_time_histogram()
 # Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt', 'METAL_MEAN', [.1, .2, .3, .4, .5], 'attendee', 'wait_time', num_steps=5))
