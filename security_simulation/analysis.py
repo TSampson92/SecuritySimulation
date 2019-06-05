@@ -1,3 +1,4 @@
+import os
 import json
 import numpy as N
 from security_simulation.Main import run_sim_from_file
@@ -18,26 +19,31 @@ class Analysis:
         return data
 
     @staticmethod
-    def avg_min_max_wait_time(final_state_dict):
+    def avg_min_max_wait_time(final_state_dict, object_name, variable_name):
         """
         calulates average, minimum, and maximum wait times for attendees
         must be run on full data
         :param final_state_dict: state_dict of the final time step of a simulation
         :return: tuple(avg, min, max)
         """
-        wait_time = N.ones(len(final_state_dict.get('attendees')))
+        wait_time = N.ones(len(final_state_dict.get(object_name)))
         i = 0
-        for v in final_state_dict.get('attendees'):
-            wait_time[i] = v['total_wait']
+        for v in final_state_dict.get(object_name):
+            wait_time[i] = v[variable_name]
             i += 1
 
         return N.average(wait_time), N.min(wait_time), N.max(wait_time)
 
     @staticmethod
-    def sensitivity_test_wait_time(base_config_filename, attribute_to_adjust_name, values_list, num_steps=3):
+    def sensitivity_test(base_config_filename,
+                         attribute_to_adjust_name, 
+                         values_list, 
+                         object_name, 
+                         variable_name, 
+                         num_steps=3):
         """
         Runs multiple simulations varying one parameter producing a results file
-        e.g. Analysis.sensitivity_test_wait_time('input_parameters.txt', 'METAL_MEAN', [.1, .2, .3, .4, .5], num_steps=5)
+        e.g. Analysis.sensitivity_test('input_parameters.txt', 'METAL_MEAN', [.1, .2, .3, .4, .5], num_steps=5)
         :param base_config_filename: path to file of the base config file to use
         :param attribute_to_adjust_name: name of attribute being varied in the config file
         :param values_list: list containing all the values fo the attribute_to_adjust that will be used
@@ -47,17 +53,30 @@ class Analysis:
                  values_list[0].
         """
         loaded_config_data = None
-        with open(base_config_filename, 'r') as file:
+        
+        directory_path = os.path.realpath(os.path.join(os.getcwd(), 
+                                          os.path.dirname(__file__)))
+
+        input_file_path = os.path.join(directory_path, base_config_filename)
+
+        with open(input_file_path, 'r') as file:
             loaded_config_data = json.loads(file.read())
 
         # generate needed config files
         config_file_names = []
         for i in range(num_steps):
-            new_cofig_name = 'sensitivity_config_' + str(time.time()) + '_' + str(i)
+            directory_path = os.path.realpath(os.path.join(os.getcwd(), 
+                                          os.path.dirname(__file__)))
+
+            new_config_name = os.path.join(directory_path, 
+                                           'sensitivity_config_' 
+                                           + str(time.time()) 
+                                           + '_' 
+                                           + str(i))
             loaded_config_data[attribute_to_adjust_name] = values_list[i]
-            with open(new_cofig_name, 'w') as file:
+            with open(new_config_name, 'w') as file:
                 file.write(json.dumps(loaded_config_data))
-            config_file_names.append(new_cofig_name)
+            config_file_names.append(new_config_name)
 
         # run a simulation for each config file
         sim_data_file_names = []
@@ -71,7 +90,7 @@ class Analysis:
             sim_data = Analysis.load_simulation_file(name)
             params = sim_data['params']
             last_time_step = str(params['closed_door_time'])
-            results[str(i)] = Analysis.avg_min_max_wait_time(sim_data[last_time_step])
+            results[str(i)] = Analysis.avg_min_max_wait_time(sim_data[last_time_step], object_name, variable_name)
             i += 1
 
         # write the results to file
@@ -84,7 +103,7 @@ class Analysis:
     def plot_results(results_file_name):
         """
         plots avg, min, max from sensitivity analysis
-        :param results_file_name: filename from output of sensitivity_test_wait_time
+        :param results_file_name: filename from output of sensitivity_test
         :return:
         """
         with open(results_file_name, 'r') as file:
@@ -104,5 +123,5 @@ class Analysis:
 
 
 # example plotting sensitivity to num attendees
-# Analysis.plot_results(Analysis.sensitivity_test_wait_time('input_parameters.txt', 'ATTENDEE_NUMBER', [5 * i for i in range(1,26)], num_steps=25))
-# Analysis.plot_results(Analysis.sensitivity_test_wait_time('input_parameters.txt', 'METAL_MEAN', [.1, .2, .3, .4, .5], num_steps=5))
+Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt', 'ATTENDEE_NUMBER', [5 * i for i in range(1,26)], 'attendees', 'wait_time', num_steps=25))
+# Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt', 'METAL_MEAN', [.1, .2, .3, .4, .5], 'attendee', 'wait_time', num_steps=5))
