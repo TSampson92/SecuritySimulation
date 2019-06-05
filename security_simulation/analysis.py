@@ -116,24 +116,40 @@ class Analysis:
                 average.append(results[0])
                 minimum.append(results[1])
                 maximum.append(results[2])
-            plt.plot(range(0, (len(data))), minimum, color='blue')
-            plt.plot(range(0, (len(data))), maximum, color='red')
-            plt.plot(range(0, (len(data))), average, color='orange')
-            plt.xlabel = x_label
-            plt.ylabel = "Time(s)"
-            plt.title = title
-            plt.legend()
+            fig, ax = plt.subplots()
+            ax.plot(range(1, (len(data)+1)), minimum, color='blue', label='min')
+            ax.plot(range(1, (len(data)+1)), maximum, color='red', label='max')
+            ax.plot(range(1, (len(data)+1)), average, color='orange', label='avg')
+            plt.xlabel(x_label)
+            plt.ylabel("Time(s)")
+            plt.title(title)
+            legend = ax.legend(loc='upper left', shadow=True, fontsize='x-large')
+            legend.get_frame().set_facecolor('C7')
             plt.show()
 
 
 # example plotting sensitivity to num attendees
-Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt',
-                                                'ATTENDEE_NUMBER', 
-                                                [5 * i for i in range(1,26)], 
-                                                'attendees', 
-                                                'total_wait', 
-                                                num_steps=25),
-                      'Wait Time Based on Number of Attendees Times 5',
-                      'Number of Attendees Time 5')
+# Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt',
+#                                                 'ATTENDEE_NUMBER',
+#                                                 [5000 * i for i in range(1,5)],
+#                                                 'attendees',
+#                                                 'total_wait',
+#                                                 num_steps=4),
+#                       'Wait Time Based on Number of Attendees * 5000',
+#                       'Number of Attendees * 5000')
+
+# index 0 refers to num of security for bag check
+# index 1 refers to num security in metal detector
+# index 2 refers num of security after detector
+# [1,1,1]
+#
+# Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt',
+#                                                 'SECURITY_PERSONNEL_SETS',
+#                                                 [[[1,10,1]],[[2,10,1]],[[3,10,1]],[[4,10,1]],[[5,10,1]]],
+#                                                 'attendees',
+#                                                 'total_wait',
+#                                                 num_steps=5),
+#                       'Wait Time Based on Bag Checkers with 10 metal detectors',
+#                       'Number of bag checkers')
                                                 
 # Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt', 'METAL_MEAN', [.1, .2, .3, .4, .5], 'attendee', 'wait_time', num_steps=5))

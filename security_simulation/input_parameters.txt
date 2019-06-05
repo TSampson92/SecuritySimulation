@@ -5,9 +5,7 @@
 		[3,1,1]],
 	"BAG_CHECKERS": [true, false],
 	"CHECKPOINT_LOCATIONS": [
-		[175, 108],
-		[228, 126],
-		[240, 252]
+		[175, 108]
 	],
 	"CHECKPOINT_CONFIGURATIONS": [0, 1],
 	"SPAWNPOINT_LOCATIONS": [
