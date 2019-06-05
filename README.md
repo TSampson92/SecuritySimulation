@@ -11,7 +11,7 @@ from SecuritySimulation directory
 in a terminal run command "pytest"
 
 ## ------- RUNNING --------
-###To run the simulation with basic settings:
+* To run the simulation with basic settings:
     1. Run the install
     2. from SecuritySimulation: python security_simulation/Main.py
     3. This will run the default sim - 200 attendees at 500 seconds
@@ -25,14 +25,14 @@ configurations and simulations.
 ##Modifiable Parameterss:
 * Security Personnel Sets: Should be the same number of lisCheckpointlocations. Defines: [bag checkers, metal detector/person, wand/after check person]
 
-* Checkpoint Locations: Definies the active checkpoints in the simulation. These checkpoints can be defined for Tacoma Dome from this list:
+* Checkpoint Locations: Definies the active checkpoints in the simulation. The checkpoints for Tacoma Dome can be defined from this list:
     * CHECKPOINT_A = (175,108)
     * CHECKPOINT_B = (228,126)
     * CHECKPOINT_C = (180,120)
     * CHECKPOINT_D = (240,252)
     * CHECKPOINT_E = (140,180)
     * CHECKPOINT_F = (80,180)
-* Spawnpoint Locations: Defines the points that attendees will spawn from. These checkpoints can be defined for Tacoma Dome from this list:
+* Spawnpoint Locations: Defines the points that attendees will spawn from. The spawnpoints for Tacoma Dome can be defined from this list:
     * PARKING_D = (330,124)
     * PARKING_E = (285,187)
     * PARKING_F = (120,260)
@@ -64,8 +64,12 @@ configurations and simulations.
 
 
         
-##Developers:
+## Developers:
 * Torren Sampson
+    * @TSampson92
 * Michael Courter
+    * @MichaelCourter64
 * Sahjpreet Brar
+    * @brars
 * Nick Lewis
+    * @NickRL21
