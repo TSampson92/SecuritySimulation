@@ -100,7 +100,7 @@ class Analysis:
         return results_file_name
 
     @staticmethod
-    def plot_results(results_file_name):
+    def plot_results(results_file_name, title, x_label):
         """
         plots avg, min, max from sensitivity analysis
         :param results_file_name: filename from output of sensitivity_test
@@ -119,9 +119,21 @@ class Analysis:
             plt.plot(range(0, (len(data))), minimum, color='blue')
             plt.plot(range(0, (len(data))), maximum, color='red')
             plt.plot(range(0, (len(data))), average, color='orange')
+            plt.xlabel = x_label
+            plt.ylabel = "Time(s)"
+            plt.title = title
+            plt.legend()
             plt.show()
 
 
 # example plotting sensitivity to num attendees
-Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt', 'ATTENDEE_NUMBER', [5 * i for i in range(1,26)], 'attendees', 'wait_time', num_steps=25))
+Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt',
+                                                'ATTENDEE_NUMBER', 
+                                                [5 * i for i in range(1,26)], 
+                                                'attendees', 
+                                                'total_wait', 
+                                                num_steps=25),
+                      'Wait Time Based on Number of Attendees Times 5',
+                      'Number of Attendees Time 5')
+                                                
 # Analysis.plot_results(Analysis.sensitivity_test('input_parameters.txt', 'METAL_MEAN', [.1, .2, .3, .4, .5], 'attendee', 'wait_time', num_steps=5))
