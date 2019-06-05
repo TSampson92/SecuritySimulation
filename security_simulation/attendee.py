@@ -110,10 +110,10 @@ class Attendee(object):
         # found the target checkpoint, set that as the target_checkpoint
         checkpoint_candidate = checkpoints[min_index]
         if self.checkpoint_target is None or self.checkpoint_target is not checkpoint_candidate:
-            if self.checkpoint_target is not None:
-                print("Attendee:", self.attendee_id, "has changed checkpoint target from:",\
-                self.checkpoint_target.get_location(), "to checkpoint at:",\
-                checkpoint_candidate.get_location())
+            #if self.checkpoint_target is not None:
+                #print("Attendee:", self.attendee_id, "has changed checkpoint target from:",\
+                #self.checkpoint_target.get_location(), "to checkpoint at:",\
+                #checkpoint_candidate.get_location())
             self.checkpoint_target = checkpoint_candidate
             self._calc_checkpoint_arrival(checkpoint_distances[min_index], current_time)
             self._set_checkpoint_vector(self.checkpoint_target.get_location())
@@ -179,8 +179,8 @@ class Attendee(object):
 
         if self._arrived_at_checkpoint(time_step):
             self.checkpoint_target.add_attendee(self, time_step)
-            print("Attendee", self.attendee_id, "at:", self.current_location,\
-                "has moved to checkpoint at:", self.checkpoint_target.get_location())
+            #print("Attendee", self.attendee_id, "at:", self.current_location,\
+                #"has moved to checkpoint at:", self.checkpoint_target.get_location())
             self.current_location = self.checkpoint_target.get_location()
             self.walk_route[-1] = tuple(self.current_location)
             # print("Attendee Walk Route: ", self.walk_route)        

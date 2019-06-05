@@ -54,7 +54,7 @@ class SpawnPoint(object):
                 num_to_spawn = rand.randint(2, self.max_spawn)
             else:
                 num_to_spawn = 1
-            print("num spawned =", num_to_spawn)
+            #print("num spawned =", num_to_spawn)
             if num_to_spawn + current_num_attendees > self.total_attendees:
                 num_to_spawn = self.total_attendees - current_num_attendees
             for i in range(num_to_spawn):
@@ -68,7 +68,7 @@ class SpawnPoint(object):
                                     time_entered=current_time_step,
                                     has_bag=rand.randint(0, 1),
                                     )
-                print("attendee_id =", current_id_num)                    
+                #print("attendee_id =", current_id_num)                    
                 spawned_attendies.append(enter_ye)
         return spawned_attendies, num_to_spawn, current_id_num
     
