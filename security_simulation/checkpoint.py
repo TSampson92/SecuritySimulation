@@ -27,7 +27,7 @@ class Checkpoint(object):
                  not_coop_base=5,
                  not_coop_var=10,
                  metal_action='WAND',
-                 num_to_bag_check=3):
+                 num_to_bag_check=15):
         """
         Handles a single security checkpoint at an event
         :param security_roles:[bag checkers, person/metal detector, person after detector]
