@@ -8,9 +8,6 @@ import sys
 import numpy as np
 
 
-# from checkpoint import Checkpoint
-# from analysis import Analysis
-# from spawnpoint import SpawnPoint
 from security_simulation.filedump import FileDump
 from security_simulation.checkpoint import Checkpoint
 from security_simulation.spawnpoint import SpawnPoint
