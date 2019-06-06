@@ -73,3 +73,9 @@ configurations and simulations.
     * @brars
 * Nick Lewis
     * @NickRL21
+
+References:
+Tacoma Dome Image Source: https://www.tacomadome.org/plan-your-visit/parking
+Average Human Walk Speed Source: https://en.wikipedia.org/wiki/Walking
+Source for Interpolation Calculation: https://bit.ly/2K1ObIY
+Source for Matplotlib scatter and image overlay information: https://bit.ly/2EU5BU2
